@@ -1,6 +1,7 @@
-version: "3.8"
+version: '3.8'
+
 services:
-  mongo:
+  mongodb:
     image: mongo
     container_name: mongodb_container
     restart: always
@@ -9,3 +10,23 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: example
     ports:
       - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  backend:
+    build: .
+    container_name: backend_service
+    depends_on:
+      - mongodb
+    env_file:
+      - backend/.env
+    environment:
+      MONGO_URI: ${MONGO_URI}
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    command: ["node", "server.js"]
+
+volumes:
+  mongodb_data:
