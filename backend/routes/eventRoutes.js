@@ -4,21 +4,24 @@ import {
   updateEvent,
   deleteEvent,
   getAllEvents,
-  getEventAnalytics
+  getEventById,
+  getEventAnalytics,
 } from "../controllers/eventController.js";
-import { protect, restrictTo } from "../middleware/authMiddleware.js"; // Changed authorize to restrictTo
+import { protect, restrictTo } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.route("/")
-  .get(getAllEvents)
-  .post(protect, restrictTo("organizer"), createEvent); // Changed authorize to restrictTo
+// Public routes
+router.get("/", getAllEvents); // /api/v1/events (GET) - Public
+router.get("/:id", getEventById); // /api/v1/events/:id (GET) - Public
 
-router.route("/:id")
-  .put(protect, restrictTo("organizer", "admin"), updateEvent) // Changed authorize to restrictTo
-  .delete(protect, restrictTo("organizer", "admin"), deleteEvent); // Changed authorize to restrictTo
+// Organizer routes
+router.post("/", protect, restrictTo("organizer"), createEvent); // /api/v1/events (POST) - Event Organizer
+router.get("/users/events", protect, restrictTo("organizer"), getAllEvents); // /api/v1/users/events (GET) - Event Organizer
+router.get("/users/events/analytics", protect, restrictTo("organizer"), getEventAnalytics); // /api/v1/users/events/analytics (GET) - Event Organizer
 
-router.route("/my/events").get(protect, restrictTo("organizer"), getAllEvents); // Changed authorize to restrictTo
-router.route("/my/events/analytics").get(protect, restrictTo("organizer"), getEventAnalytics); // Changed authorize to restrictTo
+// Organizer or Admin routes
+router.put("/:id", protect, restrictTo("organizer", "admin"), updateEvent); // /api/v1/events/:id (PUT) - Event Organizer or Admin
+router.delete("/:id", protect, restrictTo("organizer", "admin"), deleteEvent); // /api/v1/events/:id (DELETE) - Event Organizer or Admin
 
 export default router;

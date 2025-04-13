@@ -17,25 +17,22 @@ import { protect, restrictTo } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 // Public routes
-router.post("/register", registerUser);
-router.post("/login", loginUser);
+router.post("/register", registerUser); // /api/v1/register (POST) - Public
+router.post("/login", loginUser); // /api/v1/login (POST) - Public
+router.put("/forgetPassword", forgotPassword); // /api/v1/forgetPassword (PUT) - Public
 
 // Protected routes (require authentication)
-router.use(protect); // Apply protect middleware to all routes below
+router.get("/users/profile", protect, getUserProfile); // /api/v1/users/profile (GET) - Authenticated Users
+router.put("/users/profile", protect, updateUserProfile); // /api/v1/users/profile (PUT) - Authenticated Users
 
-// User profile routes
-router.get("/profile", getUserProfile);
-router.put("/profile", updateUserProfile);
+// Admin routes (require authentication and admin role)
+router.get("/users", protect, restrictTo("admin"), getAllUsers); // /api/v1/users (GET) - Admin
+router.get("/users/:id", protect, restrictTo("admin"), getUserById); // /api/v1/users/:id (GET) - Admin
+router.put("/users/:id", protect, restrictTo("admin"), updateUserRole); // /api/v1/users/:id (PUT) - Admin
+router.delete("/users/:id", protect, restrictTo("admin"), deleteUser); // /api/v1/users/:id (DELETE) - Admin
 
-// Admin routes (require admin role)
-router.use(restrictTo("Admin")); // Apply admin restriction to all routes below
-router.get("/", getAllUsers);
-router.get("/:id", getUserById);
-router.put("/:id/role", updateUserRole);
-router.delete("/:id", deleteUser);
-
-router.put("/forgetPassword", forgotPassword); // Step 1: send OTP
-router.post("/verifyOtp", verifyOtp);          // Step 2: verify OTP
-router.put("/resetPassword", resetPassword);   // Step 3: set new password
+// Reset Password routes (public, but typically used after forgetPassword)
+router.post("/verifyOtp", verifyOtp); // Not in the table, but needed for bonus (MFA)
+router.put("/resetPassword", resetPassword); // Not explicitly in the table, but implied for bonus
 
 export default router;

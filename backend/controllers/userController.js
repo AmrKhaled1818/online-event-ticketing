@@ -1,33 +1,30 @@
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
-import sendEmail from '../utils/sendEmail.js';
+import crypto from "crypto";
+import sendEmail from "../utils/sendEmail.js";
 
 // Register a new user
 const registerUser = async (req, res) => {
   const { name, email, password, role } = req.body;
 
   try {
-    // Validate required fields
     if (!name || !email || !password) {
       return res.status(400).json({ message: "Name, email, and password are required" });
     }
 
-    // Check if user already exists
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // Create new user (password will be hashed automatically by the schema)
     const user = await User.create({
       name,
       email,
       password,
-      role: role || "User", // Default to "User" if role is not provided
+      role: role || "user",
     });
 
-    // Generate JWT token
-    const token = user.generateToken();
+    const token = user.generateToken(); // Use the model's generateToken method
 
     res.status(201).json({
       _id: user._id,
@@ -46,25 +43,21 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Validate required fields
     if (!email || !password) {
       return res.status(400).json({ message: "Email and password are required" });
     }
 
-    // Check if user exists
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // Check password
-    const isMatch = await user.comparePassword(password);
+    const isMatch = await user.matchPassword(password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // Generate JWT token
-    const token = user.generateToken();
+    const token = user.generateToken(); // Use the model's generateToken method
 
     res.json({
       _id: user._id,
@@ -81,11 +74,12 @@ const loginUser = async (req, res) => {
 // Get current user's profile
 const getUserProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select("-password");
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    res.json(user);
+    res.json({
+      _id: req.user._id,
+      name: req.user.name,
+      email: req.user.email,
+      role: req.user.role,
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
@@ -102,7 +96,7 @@ const updateUserProfile = async (req, res) => {
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
     if (req.body.password) {
-      user.password = req.body.password; // Will be hashed by the schema
+      user.password = req.body.password;
     }
 
     const updatedUser = await user.save();
@@ -118,16 +112,17 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-// Admin routes
+// Get all users (admin only)
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({}).select("-password");
+    const users = await User.find().select("-password");
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
+// Get user by ID (admin only)
 const getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select("-password");
@@ -140,32 +135,29 @@ const getUserById = async (req, res) => {
   }
 };
 
+// Update user role (admin only)
 const updateUserRole = async (req, res) => {
   try {
-    const { role } = req.body;
-    if (!["User", "Organizer", "Admin"].includes(role)) {
-      return res.status(400).json({ message: "Invalid role" });
-    }
-
     const user = await User.findById(req.params.id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    user.role = role;
-    const updatedUser = await user.save();
+    const { role } = req.body;
+    if (!["user", "organizer", "admin"].includes(role)) {
+      return res.status(400).json({ message: "Invalid role" });
+    }
 
-    res.json({
-      _id: updatedUser._id,
-      name: updatedUser.name,
-      email: updatedUser.email,
-      role: updatedUser.role,
-    });
+    user.role = role;
+    await user.save();
+
+    res.json({ message: "User role updated", role: user.role });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
+// Delete user (admin only)
 const deleteUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -174,62 +166,103 @@ const deleteUser = async (req, res) => {
     }
 
     await user.deleteOne();
-    res.json({ message: "User removed" });
+    res.json({ message: "User deleted" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+// Forget Password (send OTP)
 const forgotPassword = async (req, res) => {
-  const { email } = req.body;
-
-  const user = await User.findOne({ email });
-  if (!user) return res.status(404).json({ message: "User not found" });
-
-  const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  user.otp = otp;
-  user.otpExpires = Date.now() + 10 * 60 * 1000; // valid for 10 minutes
-
-  await user.save();
-
-  await sendEmail(user.email, "Your OTP Code", `Your OTP is: ${otp}`);
-
-  res.status(200).json({ message: "OTP sent to your email." });
-};
-
- const verifyOtp = async (req, res) => {
-  const { email, otp } = req.body;
-
-  const user = await User.findOne({ email });
-  if (!user || user.otp !== otp || user.otpExpires < Date.now()) {
-    return res.status(400).json({ message: "Invalid or expired OTP" });
-  }
-
-  // Clear OTP fields
-  user.otp = undefined;
-  user.otpExpires = undefined;
-  await user.save();
-
-  // Generate a short-lived token for password reset
-  const resetToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "15m" });
-
-  res.status(200).json({ message: "OTP verified", resetToken });
-};
-
- const resetPassword = async (req, res) => {
-  const { token, newPassword } = req.body;
-
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id);
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
 
-    if (!user) return res.status(404).json({ message: "User not found" });
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-    user.password = newPassword; // It will hash via your schema
+    // Generate OTP (for MFA bonus)
+    const otp = crypto.randomInt(100000, 999999).toString();
+    user.resetPasswordOtp = otp;
+    user.resetPasswordOtpExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
     await user.save();
 
-    res.status(200).json({ message: "Password reset successfully" });
-  } catch (err) {
-    res.status(400).json({ message: "Invalid or expired token" });
+    // Send OTP via email
+    const message = `Your OTP for password reset is: ${otp}. It is valid for 10 minutes.`;
+    await sendEmail({
+      email: user.email,
+      subject: "Password Reset OTP",
+      message,
+    });
+
+    res.json({ message: "OTP sent to email", email: user.email });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// Verify OTP
+const verifyOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    if (!email || !otp) {
+      return res.status(400).json({ message: "Email and OTP are required" });
+    }
+
+    const user = await User.findOne({
+      email,
+      resetPasswordOtp: otp,
+      resetPasswordOtpExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid or expired OTP" });
+    }
+
+    // Generate a reset token
+    const resetToken = crypto.randomBytes(20).toString("hex");
+    user.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+    user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
+    user.resetPasswordOtp = undefined;
+    user.resetPasswordOtpExpire = undefined;
+    await user.save();
+
+    res.json({ message: "OTP verified", resetToken });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// Reset Password
+const resetPassword = async (req, res) => {
+  try {
+    const { resetToken, password } = req.body;
+    if (!resetToken || !password) {
+      return res.status(400).json({ message: "Reset token and new password are required" });
+    }
+
+    const resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid or expired reset token" });
+    }
+
+    user.password = password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+
+    res.json({ message: "Password reset successful" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 

@@ -2,14 +2,17 @@ import express from "express";
 import {
   createBooking,
   getBookings,
-  cancelBooking
+  getBookingById,
+  cancelBooking,
 } from "../controllers/bookingController.js";
 import { protect, restrictTo } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-router.route("/").post(protect, restrictTo("user"), createBooking);
-router.route("/").get(protect, restrictTo("user"), getBookings);
-router.route("/:id").delete(protect, restrictTo("user"), cancelBooking);
+// Standard User routes
+router.post("/bookings", protect, restrictTo("user"), createBooking); // /api/v1/bookings (POST) - Standard User
+router.get("/users/bookings", protect, restrictTo("user"), getBookings); // /api/v1/users/bookings (GET) - Standard User
+router.get("/bookings/:id", protect, restrictTo("user"), getBookingById); // /api/v1/bookings/:id (GET) - Standard User
+router.delete("/bookings/:id", protect, restrictTo("user"), cancelBooking); // /api/v1/bookings/:id (DELETE) - Standard User
 
 export default router;

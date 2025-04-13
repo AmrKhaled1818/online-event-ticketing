@@ -1,6 +1,6 @@
 // utils/sendEmail.js
 import nodemailer from 'nodemailer';
-
+import dotenv from 'dotenv';
 const sendEmail = async ({ to, subject, text, html }) => {
     try {
         const transporter = nodemailer.createTransport({

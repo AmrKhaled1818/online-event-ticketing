@@ -15,6 +15,29 @@ export const getBookings = async (req, res) => {
   }
 };
 
+// Get a specific booking by ID
+export const getBookingById = async (req, res) => {
+  try {
+    const bookingId = req.params.id;
+    const userId = req.user._id;
+
+    // Check if booking exists and belongs to the user
+    const booking = await Booking.findOne({ _id: bookingId, user: userId })
+      .populate('event', 'title date location price description');
+    
+    if (!booking) {
+      return res.status(404).json({ message: 'Booking not found' });
+    }
+
+    res.status(200).json(booking);
+  } catch (error) {
+    if (error instanceof mongoose.Error.CastError) {
+      return res.status(400).json({ message: 'Invalid booking ID' });
+    }
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Cancel booking
 export const cancelBooking = async (req, res) => {
   try {
