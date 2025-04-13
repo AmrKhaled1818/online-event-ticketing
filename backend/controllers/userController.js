@@ -172,7 +172,6 @@ const deleteUser = async (req, res) => {
   }
 };
 
-// Forget Password (send OTP)
 const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -190,17 +189,20 @@ const forgotPassword = async (req, res) => {
     user.resetPasswordOtp = otp;
     user.resetPasswordOtpExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
     await user.save();
+    console.log("OTP generated and saved:", otp);
 
     // Send OTP via email
     const message = `Your OTP for password reset is: ${otp}. It is valid for 10 minutes.`;
+    console.log("Sending email to:", user.email);
     await sendEmail({
-      email: user.email,
+      email: user.email, // Use 'email' instead of 'to'
       subject: "Password Reset OTP",
-      message,
+      message, // Use 'message' instead of 'text' and 'html'
     });
 
     res.json({ message: "OTP sent to email", email: user.email });
   } catch (error) {
+    console.error("Error in forgotPassword:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };

@@ -68,6 +68,11 @@ export const createBooking = async (req, res) => {
     const { eventId, quantity } = req.body;
     const userId = req.user._id;
 
+    // Validate quantity
+    if (!quantity || quantity <= 0) {
+      return res.status(400).json({ message: 'Quantity must be a positive number' });
+    }
+
     const event = await Event.findById(eventId);
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });
