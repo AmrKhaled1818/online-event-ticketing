@@ -1,14 +1,13 @@
-// Import required modules using ES Module syntax
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
-import connectDB from "./config/db.js"; // Add .js extension for ESM
-//import userRoutes from "./routes/UserRoutes.js"; // Add .js extension for ESM
+import connectDB from "./config/db.js";
+//import userRoutes from "./routes/UserRoutes.js";
+import eventRoutes from "./routes/eventRoutes.js";
+import bookingRoutes from "./routes/bookingRoutes.js"; 
 
-// Load environment variables
 dotenv.config();
 
-// Connect to MongoDB
 connectDB();
 
 const app = express();
@@ -19,6 +18,8 @@ app.use(cors()); // Enable CORS (optional for development)
 
 // Mount API routes
 //app.use("/api/v1", userRoutes);
+app.use("/api/v1/events", eventRoutes);
+app.use("/api/v1/bookings", bookingRoutes);
 
 // Root route
 app.get("/", (req, res) => {

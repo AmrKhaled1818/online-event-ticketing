@@ -1,6 +1,5 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-// Define User Schema
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
@@ -11,7 +10,7 @@ const userSchema = new mongoose.Schema({
         enum: ["Standard", "Organizer", "Admin"],
         default: "Standard"
     }
-}, { timestamps: true }); // Adds createdAt & updatedAt fields
+}, { timestamps: true });
 
-// Export the User model
-module.exports = mongoose.model("User", userSchema);
+const User = mongoose.model('User', userSchema);
+export default User;
