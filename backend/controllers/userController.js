@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
+import sendEmail from '../utils/sendEmail.js';
 
 // Register a new user
 const registerUser = async (req, res) => {
@@ -178,6 +179,59 @@ const deleteUser = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) return res.status(404).json({ message: "User not found" });
+
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  user.otp = otp;
+  user.otpExpires = Date.now() + 10 * 60 * 1000; // valid for 10 minutes
+
+  await user.save();
+
+  await sendEmail(user.email, "Your OTP Code", `Your OTP is: ${otp}`);
+
+  res.status(200).json({ message: "OTP sent to your email." });
+};
+
+ const verifyOtp = async (req, res) => {
+  const { email, otp } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user || user.otp !== otp || user.otpExpires < Date.now()) {
+    return res.status(400).json({ message: "Invalid or expired OTP" });
+  }
+
+  // Clear OTP fields
+  user.otp = undefined;
+  user.otpExpires = undefined;
+  await user.save();
+
+  // Generate a short-lived token for password reset
+  const resetToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "15m" });
+
+  res.status(200).json({ message: "OTP verified", resetToken });
+};
+
+ const resetPassword = async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    user.password = newPassword; // It will hash via your schema
+    await user.save();
+
+    res.status(200).json({ message: "Password reset successfully" });
+  } catch (err) {
+    res.status(400).json({ message: "Invalid or expired token" });
+  }
+};
 
 export {
   registerUser,
@@ -188,4 +242,7 @@ export {
   getUserById,
   updateUserRole,
   deleteUser,
+  forgotPassword,
+  verifyOtp,
+  resetPassword,
 };

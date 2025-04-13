@@ -8,6 +8,9 @@ import {
   getUserById,
   updateUserRole,
   deleteUser,
+  forgotPassword,
+  verifyOtp,
+  resetPassword,
 } from "../controllers/userController.js";
 import { protect, restrictTo } from "../middleware/authMiddleware.js";
 
@@ -30,5 +33,9 @@ router.get("/", getAllUsers);
 router.get("/:id", getUserById);
 router.put("/:id/role", updateUserRole);
 router.delete("/:id", deleteUser);
+
+router.put("/forgetPassword", forgotPassword); // Step 1: send OTP
+router.post("/verifyOtp", verifyOtp);          // Step 2: verify OTP
+router.put("/resetPassword", resetPassword);   // Step 3: set new password
 
 export default router;

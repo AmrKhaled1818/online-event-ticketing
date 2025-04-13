@@ -11,7 +11,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ["User", "Organizer", "Admin"],
         default: "User"
-    }
+    },
+    otp: { type: String },
+    otpExpires: { type: Date },
+
 }, { timestamps: true }); // Adds createdAt & updatedAt fields
 
 // Hash password before saving
