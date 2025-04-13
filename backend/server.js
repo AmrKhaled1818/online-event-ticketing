@@ -1,11 +1,11 @@
-// Import required modules using ES Module syntax
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
-import connectDB from "./config/db.js"; // Add .js extension for ESM
-//import userRoutes from "./routes/UserRoutes.js"; // Add .js extension for ESM
+import connectDB from "./config/db.js";
+import userRoutes from "./routes/userRoutes.js";
+// import eventRoutes from "./routes/eventRoutes.js";
+// import bookingRoutes from "./routes/bookingRoutes.js";
 
-// Load environment variables
 dotenv.config();
 
 // Connect to MongoDB
@@ -14,18 +14,20 @@ connectDB();
 const app = express();
 
 // Middleware
-app.use(express.json()); // Parse JSON bodies
-app.use(cors()); // Enable CORS (optional for development)
+app.use(express.json());
+app.use(cors());
 
 // Mount API routes
-//app.use("/api/v1", userRoutes);
+app.use("/api/v1", userRoutes);
+// app.use("/api/v1", eventRoutes);
+// app.use("/api/v1", bookingRoutes);
 
-// Root route
+// Root route for testing
 app.get("/", (req, res) => {
   res.send("Online Event Ticketing System API");
 });
 
-// Global error-handling middleware (for part F: Error Handling)
+// Global error-handling middleware (Part F)
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: "Something went wrong!", error: err.message });

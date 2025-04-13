@@ -1,15 +1,34 @@
 import express from "express";
-import { registerUser, loginUser, getUserProfile, updateUserProfile, forgetPassword, resetPassword } from "../controllers/file1.js";
-import { protect } from "../middleware/authMiddleware.js";
+import {
+  registerUser,
+  loginUser,
+  getUserProfile,
+  updateUserProfile,
+  getAllUsers,
+  getUserById,
+  updateUserRole,
+  deleteUser,
+} from "../controllers/userController.js";
+import { protect, restrictTo } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// User Management Routes (Part B)
+// Public routes
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.get("/users/profile", protect, getUserProfile);
-router.put("/users/profile", protect, updateUserProfile);
-router.post("/forgetPassword", forgetPassword);
-router.put("/resetPassword/:token", resetPassword);
+
+// Protected routes (require authentication)
+router.use(protect); // Apply protect middleware to all routes below
+
+// User profile routes
+router.get("/profile", getUserProfile);
+router.put("/profile", updateUserProfile);
+
+// Admin routes (require admin role)
+router.use(restrictTo("Admin")); // Apply admin restriction to all routes below
+router.get("/", getAllUsers);
+router.get("/:id", getUserById);
+router.put("/:id/role", updateUserRole);
+router.delete("/:id", deleteUser);
 
 export default router;
