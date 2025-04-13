@@ -6,19 +6,19 @@ import {
   getAllEvents,
   getEventAnalytics
 } from "../controllers/eventController.js";
-import { protect, authorize } from "../middleware/authMiddleware.js";
+import { protect, restrictTo } from "../middleware/authMiddleware.js"; // Changed authorize to restrictTo
 
 const router = express.Router();
 
 router.route("/")
   .get(getAllEvents)
-  .post(protect, authorize("organizer"), createEvent);
+  .post(protect, restrictTo("organizer"), createEvent); // Changed authorize to restrictTo
 
 router.route("/:id")
-  .put(protect, authorize("organizer", "admin"), updateEvent)
-  .delete(protect, authorize("organizer", "admin"), deleteEvent);
+  .put(protect, restrictTo("organizer", "admin"), updateEvent) // Changed authorize to restrictTo
+  .delete(protect, restrictTo("organizer", "admin"), deleteEvent); // Changed authorize to restrictTo
 
-router.route("/my/events").get(protect, authorize("organizer"), getAllEvents);
-router.route("/my/events/analytics").get(protect, authorize("organizer"), getEventAnalytics);
+router.route("/my/events").get(protect, restrictTo("organizer"), getAllEvents); // Changed authorize to restrictTo
+router.route("/my/events/analytics").get(protect, restrictTo("organizer"), getEventAnalytics); // Changed authorize to restrictTo
 
 export default router;
