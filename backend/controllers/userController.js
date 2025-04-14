@@ -171,7 +171,8 @@ const deleteUser = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-
+//c79f8cdaafc9f5f6a9b425548b530671348febcf
+// In userController.js, forgotPassword function
 const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -184,20 +185,16 @@ const forgotPassword = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Generate OTP (for MFA bonus)
     const otp = crypto.randomInt(100000, 999999).toString();
     user.resetPasswordOtp = otp;
     user.resetPasswordOtpExpire = Date.now() + 10 * 60 * 1000; // 10 minutes
     await user.save();
-    console.log("OTP generated and saved:", otp);
 
-    // Send OTP via email
-    const message = `Your OTP for password reset is: ${otp}. It is valid for 10 minutes.`;
-    console.log("Sending email to:", user.email);
+    const message = `Here is your OTP to use: ${otp}. It is valid for 10 minutes.`;
     await sendEmail({
-      email: user.email, // Use 'email' instead of 'to'
+      email: user.email,
       subject: "Password Reset OTP",
-      message, // Use 'message' instead of 'text' and 'html'
+      message,
     });
 
     res.json({ message: "OTP sent to email", email: user.email });
