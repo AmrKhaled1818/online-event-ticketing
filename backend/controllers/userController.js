@@ -116,9 +116,25 @@ const updateUserProfile = async (req, res) => {
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.find().select("-password");
-    res.json(users);
+    const formattedUsers = users.map(user => ({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
+    }));
+    res.json({
+      success: true,
+      count: formattedUsers.length,
+      data: formattedUsers
+    });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    res.status(500).json({ 
+      success: false,
+      message: "Server error", 
+      error: error.message 
+    });
   }
 };
 
@@ -171,7 +187,6 @@ const deleteUser = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
-//c79f8cdaafc9f5f6a9b425548b530671348febcf
 // In userController.js, forgotPassword function
 const forgotPassword = async (req, res) => {
   try {

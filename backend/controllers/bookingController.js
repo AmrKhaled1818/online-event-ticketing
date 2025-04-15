@@ -24,7 +24,7 @@ export const getBookingById = async (req, res) => {
     // Check if booking exists and belongs to the user
     const booking = await Booking.findOne({ _id: bookingId, user: userId })
       .populate('event', 'title date location price description');
-    
+
     if (!booking) {
       return res.status(404).json({ message: 'Booking not found' });
     }
@@ -77,15 +77,16 @@ export const createBooking = async (req, res) => {
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });
     }
+    
     if (event.availableTickets < quantity) {
       return res.status(400).json({ message: 'Not enough tickets available' });
     }
 
-    const totalPrice = quantity * event.price;
+    const totalPrice = quantity * event.ticketPrice;
     const booking = new Booking({
       user: userId,
       event: eventId,
-      quantity,
+      ticketsBooked: quantity,
       totalPrice,
     });
 

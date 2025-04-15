@@ -13,12 +13,14 @@ const router = express.Router();
 
 // Public routes
 router.get("/", getAllEvents); // /api/v1/events (GET) - Public
-router.get("/:id", getEventById); // /api/v1/events/:id (GET) - Public
 
 // Organizer routes
 router.post("/", protect, restrictTo("organizer"), createEvent); // /api/v1/events (POST) - Event Organizer
-router.get("/users/events", protect, restrictTo("organizer"), getAllEvents); // /api/v1/users/events (GET) - Event Organizer
-router.get("/users/events/analytics", protect, restrictTo("organizer"), getEventAnalytics); // /api/v1/users/events/analytics (GET) - Event Organizer
+router.get("/users/events", protect, restrictTo("organizer"), getAllEvents); // /api/v1/events/users/events (GET) - Event Organizer
+router.get("/analytics", protect, restrictTo("organizer"), getEventAnalytics); // /api/v1/events/analytics (GET) - Event Organizer
+
+// Public routes with parameters
+router.get("/:id", getEventById); // /api/v1/events/:id (GET) - Public
 
 // Organizer or Admin routes
 router.put("/:id", protect, restrictTo("organizer", "admin"), updateEvent); // /api/v1/events/:id (PUT) - Event Organizer or Admin

@@ -57,14 +57,19 @@ export const updateEvent = async (req, res) => {
 
 // DELETE /api/v1/events/:id
 export const deleteEvent = async (req, res) => {
-    try{
+    try {
         const event = await Event.findById(req.params.id);
-        if(!event) return res.status(404).json({message: 'Event not found'});
-        if (!event.organizer.equals(req.user._id)) return res.status(403).json({ message: "Unauthorized" });
-        await event.remove();
-        res.json({message: 'Event deleted successfully'});
-    } catch(error){
-        res.status(500).json({message: 'Error deleting event', error: error.message});
+        if (!event) return res.status(404).json({ message: 'Event not found' });
+        
+        // Allow admin to delete any event, or organizer to delete their own events
+        if (req.user.role !== 'admin' && !event.organizer.equals(req.user._id)) {
+            return res.status(403).json({ message: "Unauthorized" });
+        }
+        
+        await event.deleteOne();
+        res.json({ message: 'Event deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error deleting event', error: error.message });
     }
 };
 
@@ -104,11 +109,13 @@ export const getEventAnalytics = async (req, res) => {
     try {
       const events = await Event.find({ organizer: req.user._id });
       const analytics = events.map((event) => ({
+        eventId: event._id,
         title: event.title,
-        percentageBooked: (((event.totalTickets - event.availableTickets) / event.totalTickets) * 100).toFixed(2)
+        totalBookings: event.totalTickets - event.remainingTickets,
+        totalAttendees: event.totalTickets - event.remainingTickets
       }));
       res.json(analytics);
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
-  };
+};
