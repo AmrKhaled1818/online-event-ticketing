@@ -6,6 +6,7 @@ import {
   getAllEvents,
   getEventById,
   getEventAnalytics,
+  updateEventStatus,
 } from "../controllers/eventController.js";
 import { protect, restrictTo } from "../middleware/authMiddleware.js";
 
@@ -23,5 +24,9 @@ router.get("/users/events/analytics", protect, restrictTo("organizer"), getEvent
 // Organizer or Admin routes
 router.put("/:id", protect, restrictTo("organizer", "admin"), updateEvent); // /api/v1/events/:id (PUT) - Event Organizer or Admin
 router.delete("/:id", protect, restrictTo("organizer", "admin"), deleteEvent); // /api/v1/events/:id (DELETE) - Event Organizer or Admin
+router.patch("/:id/status", protect, restrictTo("admin"), updateEventStatus); // /api/v1/events/:id/status
 
 export default router;
+
+
+

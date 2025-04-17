@@ -38,3 +38,9 @@ userSchema.methods.generateToken = function () {
 
 // Export the User model
 export default mongoose.model("User", userSchema);
+
+
+
+
+
+
