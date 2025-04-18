@@ -187,6 +187,7 @@ const deleteUser = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 // In userController.js, forgotPassword function
 const forgotPassword = async (req, res) => {
   try {

@@ -118,4 +118,29 @@ export const getEventAnalytics = async (req, res) => {
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
+  };
+
+// PATCH /api/v1/events/:id/status
+export const updateEventStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+
+        // Check for valid status value
+        if (!['approved', 'declined'].includes(status)) {
+            return res.status(400).json({ message: 'Invalid status value' });
+        }
+
+        const event = await Event.findById(id);
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+
+        event.status = status;
+        await event.save();
+
+        res.status(200).json({ message: `Event ${status} successfully`, event });
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating event status', error: error.message });
+    }
 };
