@@ -7,13 +7,15 @@ import {
   getEventById,
   getEventAnalytics,
   updateEventStatus,
+  getApprovedEvents,
 } from "../controllers/eventController.js";
 import { protect, restrictTo } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 // Public routes
-router.get("/", getAllEvents); // /api/v1/events (GET) - Public
+router.get("/", getApprovedEvents); // /api/v1/events (GET) - Public
+router.get("/all", getAllEvents); // /api/v1/events (GET) - Public
 
 // Organizer routes
 router.post("/", protect, restrictTo("organizer"), createEvent); // /api/v1/events (POST) - Event Organizer

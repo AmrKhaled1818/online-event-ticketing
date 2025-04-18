@@ -144,3 +144,12 @@ export const updateEventStatus = async (req, res) => {
         res.status(500).json({ message: 'Error updating event status', error: error.message });
     }
 };
+
+export const getApprovedEvents = async (req, res) => {
+    try {
+        const events = await Event.find({ status: 'approved' });
+        res.status(200).json(events);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching approved events', error: error.message });
+    }
+};  
