@@ -18,6 +18,9 @@ import { getUserEvents, getEventAnalytics } from "../controllers/eventController
 
 const router = express.Router();
 
+router.get("/users/bookings", protect, restrictTo("user"), getBookings);
+router.get("/users/events", protect, restrictTo("organizer"), getUserEvents);
+
 // Public routes
 router.post("/register", registerUser); // /api/v1/register (POST) - Public
 router.post("/login", loginUser); // /api/v1/login (POST) - Public
@@ -38,8 +41,5 @@ router.post("/verifyOtp", verifyOtp); // Not in the table, but needed for bonus 
 router.put("/resetPassword", resetPassword); // Not explicitly in the table, but implied for bonus
 
 // User routes
-// User routes
-router.get("/users/bookings", protect, restrictTo("user"), getBookings); // /api/v1/users/bookings (GET) - Standard User
-router.get("/users/events", protect, restrictTo("organizer"), getUserEvents); // /api/v1/users/events (GET) - Event Organizer
 router.get("/users/events/analytics", protect, restrictTo("organizer"), getEventAnalytics); // /api/v1/users/events/analytics (GET) - Event Organizer
 export default router;

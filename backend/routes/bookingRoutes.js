@@ -15,4 +15,5 @@ router.post("/", protect, restrictTo("user"), createBooking); // /api/v1/booking
 router.get("/:id", protect, restrictTo("user"), getBookingById); // /api/v1/bookings/:id (GET) - Standard User
 router.delete("/:id", protect, restrictTo("user"), cancelBooking); // /api/v1/bookings/:id (DELETE) - Standard User
 
+
 export default router;
