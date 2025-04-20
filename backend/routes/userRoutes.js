@@ -12,7 +12,9 @@ import {
   verifyOtp,
   resetPassword,
 } from "../controllers/userController.js";
+import { getBookings } from "../controllers/bookingController.js";
 import { protect, restrictTo } from "../middleware/authMiddleware.js";
+import { getUserEvents, getEventAnalytics } from "../controllers/eventController.js";
 
 const router = express.Router();
 
@@ -35,4 +37,9 @@ router.delete("/users/:id", protect, restrictTo("admin"), deleteUser); // /api/v
 router.post("/verifyOtp", verifyOtp); // Not in the table, but needed for bonus (MFA)
 router.put("/resetPassword", resetPassword); // Not explicitly in the table, but implied for bonus
 
+// User routes
+// User routes
+router.get("/users/bookings", protect, restrictTo("user"), getBookings); // /api/v1/users/bookings (GET) - Standard User
+router.get("/users/events", protect, restrictTo("organizer"), getUserEvents); // /api/v1/users/events (GET) - Event Organizer
+router.get("/users/events/analytics", protect, restrictTo("organizer"), getEventAnalytics); // /api/v1/users/events/analytics (GET) - Event Organizer
 export default router;

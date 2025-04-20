@@ -30,7 +30,7 @@ export const createEvent = async (req, res) => {
 export const updateEvent = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, date, location, category, image, ticketPrice, totalTickets } = req.body;
+    const { title, description, date, location, category, image, ticketPrice, totalTickets , status} = req.body;
 
     // Check if the event exists
     const event = await Event.findById(id);
@@ -47,6 +47,7 @@ export const updateEvent = async (req, res) => {
     event.image = image || event.image;
     event.ticketPrice = ticketPrice || event.ticketPrice;
     event.totalTickets = totalTickets || event.totalTickets;
+    event.status = status || event.status;
 
     await event.save();
     res.status(200).json({ message: 'Event updated successfully', event });
@@ -131,15 +132,21 @@ export const updateEventStatus = async (req, res) => {
             return res.status(400).json({ message: 'Invalid status value' });
         }
 
-        const event = await Event.findById(id);
+        // Find and update the event in one operation
+        const event = await Event.findByIdAndUpdate(
+            id,
+            { status: status },
+            { new: true, runValidators: true }
+        );
+
         if (!event) {
             return res.status(404).json({ message: 'Event not found' });
         }
 
-        event.status = status;
-        await event.save();
-
-        res.status(200).json({ message: `Event ${status} successfully`, event });
+        res.status(200).json({ 
+            message: `Event ${status} successfully`, 
+            event: event 
+        });
     } catch (error) {
         res.status(500).json({ message: 'Error updating event status', error: error.message });
     }
@@ -147,7 +154,8 @@ export const updateEventStatus = async (req, res) => {
 
 export const getApprovedEvents = async (req, res) => {
     try {
-        const events = await Event.find({ status: 'approved' });
+        const events = await Event.find({ status: 'approved' })
+            .populate('organizer', 'name email');
         res.status(200).json(events);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching approved events', error: error.message });

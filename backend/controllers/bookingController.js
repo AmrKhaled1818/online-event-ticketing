@@ -7,11 +7,35 @@ import mongoose from "mongoose";
 export const getBookings = async (req, res) => {
   try {
     const userId = req.user._id;
+    
+    // Find all bookings for the current user and populate more event details
     const bookings = await Booking.find({ user: userId })
-      .populate('event', 'title date location price');
-    res.status(200).json(bookings);
+      .populate({
+        path: 'event',
+        select: 'title date location price description image category status'
+      })
+      .sort({ createdAt: -1 }); // Sort by most recent first
+
+    if (!bookings || bookings.length === 0) {
+      return res.status(200).json({
+        success: true,
+        count: 0,
+        data: []
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      count: bookings.length,
+      data: bookings
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Error fetching bookings:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching bookings',
+      error: error.message
+    });
   }
 };
 

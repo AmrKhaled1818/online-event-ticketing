@@ -19,7 +19,6 @@ router.get("/all", getAllEvents); // /api/v1/events (GET) - Public
 
 // Organizer routes
 router.post("/", protect, restrictTo("organizer"), createEvent); // /api/v1/events (POST) - Event Organizer
-router.get("/users/events", protect, restrictTo("organizer"), getAllEvents); // /api/v1/events/users/events (GET) - Event Organizer
 router.get("/analytics", protect, restrictTo("organizer"), getEventAnalytics); // /api/v1/events/analytics (GET) - Event Organizer
 
 // Public routes with parameters
@@ -29,6 +28,7 @@ router.get("/:id", getEventById); // /api/v1/events/:id (GET) - Public
 router.put("/:id", protect, restrictTo("organizer", "admin"), updateEvent); // /api/v1/events/:id (PUT) - Event Organizer or Admin
 router.delete("/:id", protect, restrictTo("organizer", "admin"), deleteEvent); // /api/v1/events/:id (DELETE) - Event Organizer or Admin
 router.patch("/:id/status", protect, restrictTo("admin"), updateEventStatus); // /api/v1/events/:id/status
+
 
 export default router;
 
