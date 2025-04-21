@@ -37,8 +37,8 @@ router.put("/users/:id", protect, restrictTo("admin"), updateUserRole); // /api/
 router.delete("/users/:id", protect, restrictTo("admin"), deleteUser); // /api/v1/users/:id (DELETE) - Admin
 
 // Reset Password routes (public, but typically used after forgetPassword)
-router.post("/verifyOtp", verifyOtp); // Not in the table, but needed for bonus (MFA)
-router.put("/resetPassword", resetPassword); // Not explicitly in the table, but implied for bonus
+router.post("/verifyOtp", verifyOtp);
+router.put("/resetPassword", resetPassword); 
 
 // User routes
 router.get("/users/events/analytics", protect, restrictTo("organizer"), getEventAnalytics); // /api/v1/users/events/analytics (GET) - Event Organizer
