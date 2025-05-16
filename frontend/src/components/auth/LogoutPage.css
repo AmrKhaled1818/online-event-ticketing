@@ -1,0 +1,24 @@
+.logout-wrapper {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.video-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+
+.logout-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: white;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.6);
+}

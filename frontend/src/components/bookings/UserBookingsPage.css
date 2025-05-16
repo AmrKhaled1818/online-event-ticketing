@@ -1,0 +1,12 @@
+.bookings-page {
+    padding: 2rem;
+    text-align: center;
+}
+
+.booking-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 2rem;
+}

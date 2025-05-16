@@ -1,0 +1,39 @@
+.event-details-wrapper {
+    max-width: 600px;
+    margin: 3rem auto;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.1);
+}
+
+.booking-section {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.booking-section input {
+    width: 80px;
+    padding: 0.5rem;
+}
+
+.booking-section button {
+    padding: 0.5rem 1rem;
+    background: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.success-message {
+    color: green;
+    margin-top: 1rem;
+}
+
+.error-message {
+    color: red;
+    margin-top: 1rem;
+}

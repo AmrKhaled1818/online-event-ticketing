@@ -1,0 +1,8 @@
+.booking-details {
+    max-width: 600px;
+    margin: 3rem auto;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.1);
+}

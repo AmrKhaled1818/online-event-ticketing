@@ -1,0 +1,41 @@
+.booking-card {
+    background: #fff;
+    padding: 1.2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    text-align: left;
+}
+
+.booking-card h3 {
+    margin-bottom: 0.5rem;
+}
+
+.booking-card p {
+    margin: 0.3rem 0;
+}
+
+.booking-actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.booking-actions button {
+    flex: 1;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.booking-actions .cancel-btn {
+    background-color: red;
+    color: white;
+}
+
+.booking-actions button:not(.cancel-btn) {
+    background-color: #1976d2;
+    color: white;
+}
