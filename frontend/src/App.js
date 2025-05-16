@@ -4,16 +4,16 @@ import LoginPage from './components/auth/LoginPage';
 import RegisterPage from './components/auth/RegisterPage';
 import ForgotPasswordPage from './components/auth/ForgotPasswordPage';
 import LogoutPage from './components/auth/LogoutPage';
-import ProfilePage from './components/Profile/ProfilePage';
-import EventList from './components/Events/EventList';
-import EventDetails from './components/Events/EventDetails';
-import UserBookingsPage from './components/Bookings/UserBookingsPage';
-import BookingDetails from './components/Bookings/BookingDetails';
-import MyEventsPage from './components/Events/MyEventsPage';
-import EventForm from './components/Events/EventForm';
-import EventAnalytics from './components/Events/EventAnalytics';
-import AdminEventsPage from './components/Admin/AdminEventsPage';
-import AdminUsersPage from './components/Admin/AdminUsersPage';
+import ProfilePage from './components/profile/ProfilePage';
+import EventList from './components/events/EventList';
+import EventDetails from './components/events/EventDetails';
+import UserBookingsPage from './components/bookings/UserBookingsPage';
+import BookingDetails from './components/bookings/BookingDetails';
+import MyEventsPage from './components/events/MyEventsPage';
+import EventForm from './components/events/EventForm';
+import EventAnalytics from './components/events/EventAnalytics';
+import AdminEventsPage from './components/admin/AdminEventsPage';
+import AdminUsersPage from './components/admin/AdminUsersPage';
 function App() {
   return (
       <Router>
@@ -35,7 +35,8 @@ function App() {
             <Route path="/admin/events" element={<AdminEventsPage />} />
             <Route path="/admin/users" element={<AdminUsersPage />} />
 
-          <Route path="*" element={<LoginPage />} /> {/* Default route for now */}
+          <Route path="*" elem
+                 ent={<LoginPage />} /> {/* Default route for now */}
         </Routes>
       </Router>
   );
