@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import './LoginPage.css';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/api/auth/login', { email, password }, { withCredentials: true });
+            const response = await axios.post('/api/v1/login', { email, password }, { withCredentials: true });
             console.log('Login success:', response.data);
+            navigate('/events'); // Redirect to events page after login
         } catch (err) {
             setError(err.response?.data?.message || 'Login failed');
         }

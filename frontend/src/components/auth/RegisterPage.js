@@ -7,8 +7,7 @@ const RegisterPage = () => {
         name: '',
         email: '',
         password: '',
-        confirmPassword: '',
-        role: 'User',
+        role: 'user',
     });
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
@@ -25,7 +24,7 @@ const RegisterPage = () => {
         }
 
         try {
-            const response = await axios.post('/api/auth/register', formData);
+            const response = await axios.post('/api/v1/register', formData);
             console.log('Register success:', response.data);
             setSuccess('Registration successful! You can now log in.');
             setError('');
@@ -79,8 +78,9 @@ const RegisterPage = () => {
                         required
                     />
                     <select name="role" value={formData.role} onChange={handleChange}>
-                        <option value="User">Standard User</option>
-                        <option value="Organizer">Event Organizer</option>
+                        <option value="user">Standard User</option>
+                        <option value="organizer">Event Organizer</option>
+                        <option value="admin">Admin</option>
                     </select>
                     <button type="submit">Register</button>
                     <div className="link-container">

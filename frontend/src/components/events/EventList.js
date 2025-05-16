@@ -9,7 +9,7 @@ const EventList = () => {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const res = await axios.get('/api/events/approved');
+                const res = await axios.get('/api/v1/events');
                 setEvents(res.data);
             } catch (err) {
                 console.error('Failed to fetch events', err);
