@@ -5,6 +5,9 @@ import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import eventRoutes from "./routes/eventRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
+import cookieParser from 'cookie-parser';
+
+
 
 dotenv.config();
 
@@ -15,7 +18,14 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+
+app.use(cookieParser());
+
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true                
+}));
+
 
 // Mount API routes
 app.use("/api/v1", userRoutes);

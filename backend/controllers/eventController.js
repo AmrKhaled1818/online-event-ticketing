@@ -98,12 +98,26 @@ export const getEventById = async (req, res) => {
 // GET /api/v1/events/users/events
 export const getUserEvents = async (req, res) => {
     try {
-        const events = await Event.find({ organizer: req.user._id }).populate('organizer', 'name email');
-        res.status(200).json(events);
+      console.log("👀 getUserEvents hit");
+      console.log("🔐 req.user:", req.user);
+  
+      if (!req.user || !req.user._id) {
+        console.log("❌ No user on request");
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+  
+      const events = await Event.find({ organizer: req.user._id });
+  
+      console.log("✅ Fetched events:", events.length);
+      res.status(200).json(events);
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching user events', error: error.message });
+      console.error("❌ getUserEvents crashed:", error.message);
+      console.error(error.stack); // <- this line will give full details
+      res.status(500).json({ message: "Server error", error: error.message });
     }
-};
+  };
+  
+
 
 // GET /api/v1/users/events/analytics 
 export const getEventAnalytics = async (req, res) => {

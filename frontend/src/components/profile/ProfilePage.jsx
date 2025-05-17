@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './ProfilePage.css';
-import UpdateProfileForm from './UpdateProfileForm';
-import axios from 'axios';
+import UpdateProfileForm from './UpdateProfileForm';    
+import api from '../../api/api'; 
 
 const ProfilePage = () => {
     const [user, setUser] = useState(null);
@@ -10,7 +10,7 @@ const ProfilePage = () => {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const response = await axios.get('/api/users/profile', { withCredentials: true });
+                const response = await api.get('/users/profile');
                 setUser(response.data);
             } catch (err) {
                 console.error('Failed to fetch profile', err);
@@ -21,23 +21,19 @@ const ProfilePage = () => {
 
     return (
         <div className="profile-wrapper">
-            <video autoPlay muted loop className="video-background">
-                <source src="/background.mp4" type="video/mp4" />
-            </video>
-
-            <div className="profile-container">
+            <div className="profile-card">
                 {!user ? (
-                    <p>Loading profile...</p>
+                    <p className="loading-text">Loading profile...</p>
                 ) : editMode ? (
                     <UpdateProfileForm user={user} onUpdate={() => setEditMode(false)} />
                 ) : (
-                    <div className="profile-card">
-                        <h2>Your Profile</h2>
-                        <p><strong>Name:</strong> {user.name}</p>
-                        <p><strong>Email:</strong> {user.email}</p>
-                        <p><strong>Role:</strong> {user.role}</p>
+                    <>
+                        <h2>Welcome, {user.name}</h2>
+                        <p><span>Name:</span> {user.name}</p>
+                        <p><span>Email:</span> {user.email}</p>
+                        <p><span>Role:</span> {user.role}</p>
                         <button onClick={() => setEditMode(true)}>Edit Profile</button>
-                    </div>
+                    </>
                 )}
             </div>
         </div>

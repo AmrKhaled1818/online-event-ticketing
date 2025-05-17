@@ -1,5 +1,12 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+  Navigate,
+} from 'react-router-dom';
+
 import LoginPage from './components/auth/LoginPage';
 import RegisterPage from './components/auth/RegisterPage';
 import ForgotPasswordPage from './components/auth/ForgotPasswordPage';
@@ -14,14 +21,38 @@ import EventForm from './components/events/EventForm';
 import EventAnalytics from './components/events/EventAnalytics';
 import AdminEventsPage from './components/admin/AdminEventsPage';
 import AdminUsersPage from './components/admin/AdminUsersPage';
+import Navbar from './components/navbar/Navbar';
 
-function App() {
+// Simple auth check (can be replaced later with proper context)
+const isAuthenticated = document.cookie.includes('token=') || localStorage.getItem('token');
+
+function AppRoutes() {
+  const location = useLocation();
+  const hideNavbarPaths = ['/login', '/register', '/forgot-password'];
+  const shouldShowNavbar = !hideNavbarPaths.includes(location.pathname);
+
   return (
-    <Router>
+    <>
+      {shouldShowNavbar && <Navbar />}
       <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        {/* Redirect root based on auth */}
+        <Route path="/" element={isAuthenticated ? <Navigate to="/events" /> : <Navigate to="/login" />} />
+
+        {/* Public routes with protection from logged-in access */}
+        <Route
+          path="/login"
+          element={isAuthenticated ? <Navigate to="/events" /> : <LoginPage />}
+        />
+        <Route
+          path="/register"
+          element={isAuthenticated ? <Navigate to="/events" /> : <RegisterPage />}
+        />
+        <Route
+          path="/forgot-password"
+          element={isAuthenticated ? <Navigate to="/events" /> : <ForgotPasswordPage />}
+        />
+
+        {/* Protected Routes */}
         <Route path="/logout" element={<LogoutPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/events" element={<EventList />} />
@@ -35,8 +66,18 @@ function App() {
         <Route path="/my-events/analytics" element={<EventAnalytics />} />
         <Route path="/admin/events" element={<AdminEventsPage />} />
         <Route path="/admin/users" element={<AdminUsersPage />} />
-        <Route path="*" element={<LoginPage />} />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppRoutes />
     </Router>
   );
 }

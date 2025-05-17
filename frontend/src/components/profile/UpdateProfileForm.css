@@ -1,58 +1,75 @@
 .update-form {
-    background: rgba(255, 255, 255, 0.9);
-    padding: 2rem;
-    border-radius: 12px;
-    width: 350px;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    text-align: left;
 }
 
 .update-form h2 {
     margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: #1f2937;
     text-align: center;
 }
 
 .update-form input {
-    margin-bottom: 1rem;
     padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
     font-size: 1rem;
+    background-color: #f9fafb;
+    transition: border 0.2s ease;
+}
+
+.update-form input:focus {
+    outline: none;
+    border-color: #2563eb;
+    background-color: white;
 }
 
 .form-actions {
     display: flex;
     justify-content: space-between;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
 .form-actions button {
     flex: 1;
-    padding: 0.6rem;
+    padding: 0.65rem;
+    font-size: 1rem;
+    font-weight: bold;
     border: none;
     border-radius: 6px;
-    font-weight: bold;
     cursor: pointer;
+    transition: background 0.3s ease;
 }
 
 .form-actions button:first-child {
-    background-color: #1976d2;
+    background-color: #2563eb;
     color: white;
 }
 
 .form-actions button:last-child {
-    background-color: #ccc;
+    background-color: #e5e7eb;
+    color: #111827;
+}
+
+.form-actions button:hover:first-child {
+    background-color: #1d4ed8;
+}
+
+.error-message,
+.success-message {
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
 }
 
 .error-message {
-    color: red;
-    margin-bottom: 0.75rem;
-    text-align: center;
+    color: #dc2626;
 }
 
 .success-message {
-    color: green;
-    margin-bottom: 0.75rem;
-    text-align: center;
+    color: #16a34a;
 }

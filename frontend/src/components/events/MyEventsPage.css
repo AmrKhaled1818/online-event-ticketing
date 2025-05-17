@@ -1,41 +1,86 @@
 .my-events-page {
-    padding: 2rem;
+    padding: 3rem 2rem;
     text-align: center;
-}
-
-.new-event-btn {
-    margin-bottom: 1rem;
-    padding: 0.6rem 1rem;
-    background-color: #1976d2;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  h2 {
+    font-size: 2.2rem;
+    margin-bottom: 2.5rem;
+    color: #1e293b;
+  }
+  
+  .new-event-btn {
+    margin-bottom: 2.5rem;
+    padding: 0.8rem 1.6rem;
+    background: linear-gradient(to right, #3b82f6, #2563eb);
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     font-weight: bold;
+    font-size: 1rem;
     cursor: pointer;
-}
-
-.event-grid {
+    transition: background 0.3s ease;
+  }
+  
+  .new-event-btn:hover {
+    background: linear-gradient(to right, #2563eb, #1d4ed8);
+  }
+  
+  .event-grid {
     display: grid;
-    gap: 1.5rem;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-}
-
-.event-actions {
-    margin-top: 0.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+    gap: 2.5rem 2rem; /* More space between rows and columns */
+    padding: 0 1rem;
+  }
+  
+  .event-item {
+    background: white;
+    border-radius: 16px;
+    padding: 1.6rem;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    transition: transform 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 260px;
+  }
+  
+  .event-item:hover {
+    transform: translateY(-5px);
+  }
+  
+  .event-actions {
+    margin-top: auto;
     display: flex;
     justify-content: space-between;
-}
-
-.event-actions button {
+    gap: 0.8rem;
+    padding-top: 1.2rem;
+  }
+  
+  .event-actions button {
     flex: 1;
-    padding: 0.4rem;
+    padding: 0.6rem;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
-    font-weight: bold;
-}
-
-.delete-btn {
-    background-color: red;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: background 0.3s ease;
+  }
+  
+  .event-actions button:hover {
+    opacity: 0.9;
+  }
+  
+  .event-actions button:not(.delete-btn) {
+    background-color: #facc15;
+    color: #1e293b;
+  }
+  
+  .delete-btn {
+    background-color: #ef4444;
     color: white;
-}
+  }  

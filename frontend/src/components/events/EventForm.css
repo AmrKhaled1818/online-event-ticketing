@@ -1,34 +1,70 @@
 .event-form-wrapper {
-    max-width: 500px;
-    margin: 3rem auto;
-    background: white;
+    max-width: 600px;
+    margin: 4rem auto;
     padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-}
-
-.event-form h2 {
+    border-radius: 16px;
+    background-color: #ffffff;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .event-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .event-form h2 {
     text-align: center;
-    margin-bottom: 1rem;
-}
-
-.event-form input {
-    display: block;
+    margin-bottom: 2rem;
+    font-size: 1.6rem;
+    color: #0f172a;
+    font-weight: 700;
+  }
+  
+  .event-form input,
+  .event-form textarea,
+  .event-form select {
     width: 100%;
-    padding: 0.6rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-}
-
-.event-form button {
+    max-width: 520px;
+    padding: 0.65rem 1rem;
+    margin-bottom: 1.2rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background-color: #f9fafb;
+    transition: border 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .event-form textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+  
+  .event-form input:focus,
+  .event-form textarea:focus,
+  .event-form select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    background-color: #fff;
+  }
+  
+  .event-form button {
     width: 100%;
-    padding: 0.7rem;
-    background: #1976d2;
+    max-width: 520px;
+    padding: 0.9rem;
+    background: linear-gradient(to right, #3b82f6, #2563eb);
     color: white;
     border: none;
-    border-radius: 6px;
-    font-weight: bold;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
     cursor: pointer;
-}
-
+    transition: background 0.3s ease;
+  }
+  
+  .event-form button:hover {
+    background: linear-gradient(to right, #2563eb, #1e40af);
+  }
+  

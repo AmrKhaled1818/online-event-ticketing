@@ -8,29 +8,27 @@ import {
   getEventAnalytics,
   updateEventStatus,
   getApprovedEvents,
+  getUserEvents
 } from "../controllers/eventController.js";
 import { protect, restrictTo } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// Public routes
-router.get("/", getApprovedEvents); // /api/v1/events (GET) - Public
-router.get("/all", getAllEvents); // /api/v1/events (GET) - Public
+router.get("/my", protect, restrictTo("organizer", "admin"), getUserEvents); // ✔️ GET events created by logged-in organizer
 
-// Organizer routes
-router.post("/", protect, restrictTo("organizer"), createEvent); // /api/v1/events (POST) - Event Organizer
-router.get("/analytics", protect, restrictTo("organizer"), getEventAnalytics); // /api/v1/events/analytics (GET) - Event Organizer
+// PUBLIC ROUTES
+router.get("/", getApprovedEvents); // GET approved events (main page)
+router.get("/all", getAllEvents); // GET all events (admin, not usually public)
+router.get("/:id", getEventById); // GET specific event by ID (public)
 
-// Public routes with parameters
-router.get("/:id", getEventById); // /api/v1/events/:id (GET) - Public
+// ORGANIZER ROUTES
+router.post("/", protect, restrictTo("organizer", "admin"), createEvent);
+router.put("/:id", protect, restrictTo("organizer", "admin"), updateEvent);
+router.delete("/:id", protect, restrictTo("organizer", "admin"), deleteEvent);
+router.get("/analytics", protect, restrictTo("organizer", "admin"), getEventAnalytics);
 
-// Organizer or Admin routes
-router.put("/:id", protect, restrictTo("organizer", "admin"), updateEvent); // /api/v1/events/:id (PUT) - Event Organizer or Admin
-router.delete("/:id", protect, restrictTo("organizer", "admin"), deleteEvent); // /api/v1/events/:id (DELETE) - Event Organizer or Admin
-router.patch("/:id/status", protect, restrictTo("admin"), updateEventStatus); // /api/v1/events/:id/status
 
+// ADMIN ONLY
+router.patch("/:id/status", protect, restrictTo("admin"), updateEventStatus);
 
 export default router;
-
-
-
