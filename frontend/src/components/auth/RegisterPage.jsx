@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './RegisterPage.css';
 import axios from 'axios';
 
@@ -7,10 +8,12 @@ const RegisterPage = () => {
         name: '',
         email: '',
         password: '',
+        confirmPassword: '',
         role: 'user',
     });
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -26,8 +29,13 @@ const RegisterPage = () => {
         try {
             const response = await axios.post('/api/v1/register', formData);
             console.log('Register success:', response.data);
-            setSuccess('Registration successful! You can now log in.');
+            setSuccess('Registration successful! Please log in.');
             setError('');
+            
+            // Redirect after 2 seconds
+            setTimeout(() => {
+                navigate('/login');
+            }, 2000);
         } catch (err) {
             setError(err.response?.data?.message || 'Registration failed');
         }

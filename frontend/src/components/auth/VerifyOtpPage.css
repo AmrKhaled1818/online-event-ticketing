@@ -1,10 +1,10 @@
-.register-wrapper {
+.verify-wrapper {
     position: relative;
     height: 100vh;
     overflow: hidden;
-  }
-  
-  .video-background {
+}
+
+.video-background {
     position: absolute;
     top: 0;
     left: 0;
@@ -13,18 +13,17 @@
     object-fit: cover;
     filter: blur(8px) brightness(0.6);
     z-index: -1;
-  }
-  
-  .register-container {
+}
+
+.verify-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
-  }
-  
-  .register-form {
+}
+
+.verify-form {
     backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
     background: rgba(255, 255, 255, 0.07);
     padding: 2rem;
     border-radius: 16px;
@@ -34,51 +33,50 @@
     flex-direction: column;
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.2);
-  }
-  
-  .register-form h2 {
+}
+
+.verify-form h2 {
     text-align: center;
     margin-bottom: 1rem;
-    color: #ffffff; /* strong white for contrast */
+    color: #ffffff;
     font-weight: 700;
     font-size: 1.6rem;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
-  }
-  
-  .register-form select {
-    margin-bottom: 1rem;
-    padding: 0.75rem;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    background-color: rgba(255, 255, 255, 0.15);
-    color: #ffffff;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-  }
-  
-  .register-form select option {
-    background-color: #1f2937; /* dark background inside dropdown */
-    color: #f9fafb;             /* light text */
-  }
-  
-  
-  .register-form input {
-    margin-bottom: 1rem;
-    padding: 0.75rem;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white;
-  }
-  
-  .register-form input::placeholder {
+}
+
+.otp-instruction {
+    text-align: center;
     color: #d1d5db;
-  }
-  
-  .register-form button {
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.otp-inputs {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.otp-input {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    font-size: 1.2rem;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.otp-input:focus {
+    border-color: #2563eb;
+    background-color: rgba(255, 255, 255, 0.2);
+    outline: none;
+}
+
+.verify-form button {
     padding: 0.75rem;
     background-color: #2563eb;
     color: white;
@@ -87,45 +85,51 @@
     font-weight: bold;
     cursor: pointer;
     font-size: 1rem;
-  }
-  
-  .register-form button:hover {
+    transition: background-color 0.3s ease;
+}
+
+.verify-form button:hover {
     background-color: #1d4ed8;
-  }
-  
-  .link-container {
+}
+
+.link-container {
     text-align: center;
     font-size: 0.85rem;
     margin-top: 1rem;
-  }
-  
-  .link-container a {
+}
+
+.link-container a {
     color: #cbd5e1;
     text-decoration: none;
-  }
-  
-  .link-container a:hover {
+    transition: color 0.3s ease;
+}
+
+.link-container a:hover {
     color: white;
-  }
-  
-  .error-message {
+}
+
+.error-message {
     color: #f87171;
     text-align: center;
-    margin-bottom: 1rem;
-  }
-  
-  .success-message {
+    margin-bottom: 0.75rem;
+    background-color: rgba(248, 113, 113, 0.1);
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid rgba(248, 113, 113, 0.2);
+}
+
+.success-message {
     color: #34d399;
     text-align: center;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
     background-color: rgba(52, 211, 153, 0.1);
     padding: 0.5rem;
     border-radius: 6px;
     border: 1px solid rgba(52, 211, 153, 0.2);
     animation: fadeIn 0.3s ease-in;
-  }
-  
-  @keyframes fadeIn {
+}
+
+@keyframes fadeIn {
     from {
         opacity: 0;
         transform: translateY(-10px);
@@ -134,5 +138,4 @@
         opacity: 1;
         transform: translateY(0);
     }
-  }
-  
+} 
