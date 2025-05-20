@@ -170,8 +170,43 @@ export const getApprovedEvents = async (req, res) => {
     try {
         const events = await Event.find({ status: 'approved' })
             .populate('organizer', 'name email');
-        res.status(200).json(events);
+        res.status(200).json({
+            success: true,
+            count: events.length,
+            data: events
+        });
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching approved events', error: error.message });
+        res.status(500).json({ 
+            success: false,
+            message: 'Error fetching approved events', 
+            error: error.message 
+        });
     }
+};
+
+export const searchEvents = async (req, res) => {
+  try {
+    const { query } = req.query;
+    
+    if (!query) {
+      return res.status(400).json({ message: 'Search query is required' });
+    }
+
+    const events = await Event.find({
+      name: { $regex: query, $options: 'i' },
+      status: 'approved'
+    }).sort({ date: 1 });
+
+    res.status(200).json({
+      success: true,
+      count: events.length,
+      data: events
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error searching events',
+      error: error.message
+    });
+  }
 };  
