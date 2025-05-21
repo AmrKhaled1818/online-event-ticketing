@@ -59,3 +59,323 @@
     background-color: #2563eb;
   }
   
+.profile-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.profile-header h1 {
+  margin: 0;
+  color: #333;
+}
+
+.edit-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.edit-button:hover {
+  background: #0056b3;
+}
+
+.edit-button.cancel {
+  background: #dc3545;
+}
+
+.edit-button.cancel:hover {
+  background: #c82333;
+}
+
+.profile-content {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 2rem;
+}
+
+.profile-picture-section {
+  text-align: center;
+}
+
+.profile-picture {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+  border: 3px solid #007bff;
+}
+
+.profile-picture-input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #555;
+}
+
+.form-group input {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.form-group input:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.role-input {
+  background: #f5f5f5 !important;
+  color: #666;
+}
+
+.password-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ddd;
+}
+
+.password-section h3 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.error-message {
+  color: #dc3545;
+  padding: 0.5rem;
+  background: #f8d7da;
+  border-radius: 5px;
+  margin-top: 1rem;
+}
+
+.save-button {
+  padding: 0.75rem 1.5rem;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s;
+}
+
+.save-button:hover {
+  background: #218838;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.error {
+  text-align: center;
+  padding: 2rem;
+  color: #dc3545;
+}
+
+.success-message {
+  color: #28a745;
+  padding: 0.5rem;
+  background: #d4edda;
+  border-radius: 5px;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .profile-content {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-picture-section {
+    margin-bottom: 2rem;
+  }
+}
+
+.password-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-group input {
+  flex: 1;
+  padding-right: 3rem;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: color 0.2s;
+}
+
+.toggle-password:hover {
+  color: #007bff;
+}
+
+.bookings-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #ddd;
+}
+
+.bookings-section h2 {
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.no-bookings {
+  text-align: center;
+  color: #666;
+  padding: 1rem;
+}
+
+.bookings-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.booking-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.booking-info {
+  flex: 1;
+}
+
+.booking-info h3 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+}
+
+.booking-info p {
+  margin: 0.25rem 0;
+  color: #666;
+}
+
+.cancel-booking-button {
+  padding: 0.5rem 1rem;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.cancel-booking-button:hover {
+  background: #c82333;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+}
+
+.modal-content h3 {
+  margin: 0 0 1rem 0;
+  color: #333;
+}
+
+.modal-content p {
+  margin-bottom: 1.5rem;
+  color: #666;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.modal-button {
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s;
+}
+
+.modal-button.confirm {
+  background: #dc3545;
+  color: white;
+}
+
+.modal-button.confirm:hover {
+  background: #c82333;
+}
+
+.modal-button.cancel {
+  background: #6c757d;
+  color: white;
+}
+
+.modal-button.cancel:hover {
+  background: #5a6268;
+}
+  
