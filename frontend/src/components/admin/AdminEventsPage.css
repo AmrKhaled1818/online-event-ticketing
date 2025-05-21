@@ -1,5 +1,55 @@
-.admin-events-page {
+.admin-page {
     padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.admin-title {
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+    text-align: center;
+    font-size: 2rem;
+}
+
+.admin-tabs {
+    display: flex;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.tab-button {
+    padding: 0.8rem 1.5rem;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.3s ease;
+    margin-right: 1rem;
+}
+
+.tab-button:hover {
+    color: #3498db;
+}
+
+.tab-button.active {
+    color: #3498db;
+}
+
+.tab-button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #3498db;
+}
+
+.admin-events-page {
+    padding: 1rem 0;
     max-width: 1200px;
     margin: 0 auto;
 }
