@@ -33,7 +33,7 @@ const EventDetails = () => {
 
   const handleBookTicket = async () => {
     try {
-      const response = await api.post('/bookings', {
+      await api.post('/bookings', {
         eventId: event._id,
         quantity: quantity
       });
