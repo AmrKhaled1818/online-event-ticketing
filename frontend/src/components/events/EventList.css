@@ -186,8 +186,8 @@
 
 .event-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 3rem;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2rem 1rem; /* vertical gap (row) and horizontal gap (column) */
     padding: 2rem;
     max-width: 1400px;
     margin: 0 auto;
@@ -195,18 +195,15 @@
 
 .event-card {
     background: white;
-    border-radius: 12px;
+    border-radius: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 2rem;
     transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
-    height: 100%;
-    min-height: 450px;
+    height: 580px; /* let the height be determined by content */
     border: 1px solid #eee;
-    margin: 0.5rem;
 }
-
 .event-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
