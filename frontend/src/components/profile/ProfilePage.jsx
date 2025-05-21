@@ -318,8 +318,8 @@ const ProfilePage = () => {
                       <h3>{booking.event.title}</h3>
                       <p>Date: {new Date(booking.event.date).toLocaleDateString()}</p>
                       <p>Location: {booking.event.location}</p>
-                      <p>Tickets: {booking.quantity}</p>
-                      <p>Total: ${booking.quantity * booking.event.ticketPrice}</p>
+                      <p>Tickets: {booking.ticketsBooked}</p>
+                      <p>Total: ${booking.totalPrice}</p>
                     </div>
                     <button 
                       className="cancel-booking-button"
