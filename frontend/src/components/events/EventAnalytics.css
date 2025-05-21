@@ -1,8 +1,208 @@
 .analytics-wrapper {
-    max-width: 900px;
-    margin: 3rem auto;
+    max-width: 1200px;
+    margin: 2rem auto;
     background: white;
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+}
+
+.analytics-wrapper h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #2c3e50;
+}
+
+.analytics-wrapper h3 {
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+}
+
+.analytics-wrapper.loading,
+.analytics-wrapper.error,
+.no-data {
+    text-align: center;
+    padding: 3rem 0;
+    color: #64748b;
+    font-size: 1.2rem;
+}
+
+.analytics-wrapper.error {
+    color: #e53e3e;
+}
+
+/* Summary stats at the top */
+.summary-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.stat-card {
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    transition: transform 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card .stat-value {
+    display: block;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #3498db;
+    margin-bottom: 0.5rem;
+}
+
+.stat-card .stat-label {
+    color: #64748b;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Charts container */
+.charts-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.chart-container {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+}
+
+.chart-container h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+    color: #2c3e50;
+}
+
+/* Event cards */
+.event-cards-container h3 {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.event-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.event-card {
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.event-card h4 {
+    background: #3498db;
+    color: white;
+    margin: 0;
+    padding: 1rem;
+    font-size: 1.1rem;
+}
+
+.event-stats {
+    padding: 1.25rem;
+}
+
+.event-stats .stat {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+}
+
+.event-stats .stat-label {
+    color: #64748b;
+    font-weight: 600;
+}
+
+.booking-progress {
+    height: 10px;
+    background-color: #edf2f7;
+    overflow: hidden;
+    position: relative;
+    margin-top: 0.5rem;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #3498db;
+    color: white;
+    text-align: center;
+    font-size: 0.75rem;
+    line-height: 10px;
+    font-weight: bold;
+    overflow: visible;
+    white-space: nowrap;
+    padding-left: 5px;
+}
+
+.status-approved {
+    color: #38a169;
+    font-weight: 600;
+}
+
+.status-pending {
+    color: #ed8936;
+    font-weight: 600;
+}
+
+.status-declined {
+    color: #e53e3e;
+    font-weight: 600;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 1024px) {
+    .charts-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .summary-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .analytics-wrapper {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .summary-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .event-cards {
+        grid-template-columns: 1fr;
+    }
 }

@@ -27,12 +27,20 @@ const MyEventsPage = () => {
   return (
     <div className="my-events-page">
       <h2>My Events</h2>
-      <button
-        className="new-event-btn"
-        onClick={() => navigate('/my-events/new')}
-      >
-        ➕ Create New Event
-      </button>
+      <div className="action-buttons">
+        <button
+          className="new-event-btn"
+          onClick={() => navigate('/my-events/new')}
+        >
+          ➕ Create New Event
+        </button>
+        <button
+          className="analytics-btn"
+          onClick={() => navigate('/my-events/analytics')}
+        >
+          📊 View Analytics
+        </button>
+      </div>
 
       <div className="event-grid">
         {events.length === 0 ? (
