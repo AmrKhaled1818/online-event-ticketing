@@ -20,8 +20,8 @@ router.get("/my", protect, restrictTo("organizer", "admin"), getUserEvents); // 
 // PUBLIC ROUTES
 router.get("/", getApprovedEvents); // GET approved events (main page)
 router.get("/all", getAllEvents); // GET all events (admin, not usually public)
-router.get("/:id", getEventById); // GET specific event by ID (public)
 router.get("/search", searchEvents); // GET events by search query
+router.get("/:id", getEventById); // GET specific event by ID (public)
 
 // ORGANIZER ROUTES
 router.post("/", protect, restrictTo("organizer", "admin"), createEvent);

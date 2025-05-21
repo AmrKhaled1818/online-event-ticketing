@@ -84,14 +84,30 @@ export const getAllEvents = async (req, res) => {
     }
 };
 
-// GET /api/v1/events 
+// GET /api/v1/events/:id
 export const getEventById = async (req, res) => {
     try {
-        const event = await Event.findById(req.params.id).populate('organizer', 'name email');
-        if (!event) return res.status(404).json({ message: 'Event not found' });
-        res.status(200).json(event);
+        const event = await Event.findById(req.params.id)
+            .populate('organizer', 'name email');
+            
+        if (!event) {
+            return res.status(404).json({ 
+                success: false,
+                message: 'Event not found' 
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: event
+        });
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching event', error: error.message });
+        console.error('Error fetching event:', error);
+        res.status(500).json({ 
+            success: false,
+            message: 'Error fetching event', 
+            error: error.message 
+        });
     }
 };
 
@@ -189,13 +205,17 @@ export const searchEvents = async (req, res) => {
     const { query } = req.query;
     
     if (!query) {
-      return res.status(400).json({ message: 'Search query is required' });
+      return res.status(400).json({ 
+        success: false,
+        message: 'Search query is required' 
+      });
     }
 
     const events = await Event.find({
-      name: { $regex: query, $options: 'i' },
+      title: { $regex: query, $options: 'i' },
       status: 'approved'
-    }).sort({ date: 1 });
+    }).populate('organizer', 'name email')
+      .sort({ date: 1 });
 
     res.status(200).json({
       success: true,
@@ -203,6 +223,7 @@ export const searchEvents = async (req, res) => {
       data: events
     });
   } catch (error) {
+    console.error('Search error:', error);
     res.status(500).json({
       success: false,
       message: 'Error searching events',

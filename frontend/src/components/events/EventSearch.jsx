@@ -3,47 +3,58 @@ import './EventSearch.css';
 import api from '../../api/api';
 
 const EventSearch = ({ onSearchResults }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (!searchQuery.trim()) return;
-
-    setIsLoading(true);
     setError('');
+    
+    if (!searchTerm.trim()) {
+      onSearchResults(null);
+      return;
+    }
 
     try {
-      const response = await api.get(`/events/search?query=${encodeURIComponent(searchQuery)}`);
-      onSearchResults(response.data.data);
-    } catch (err) {
-      setError(err.response?.data?.message || 'Error searching events');
+      setLoading(true);
+      const response = await api.get(`/events/search?query=${encodeURIComponent(searchTerm)}`);
+      if (response.data.success) {
+        onSearchResults(response.data.data);
+      } else {
+        onSearchResults([]);
+        setError(response.data.message || 'No events found');
+      }
+    } catch (error) {
+      console.error('Search error:', error);
+      setError(error.response?.data?.message || 'Error searching events');
       onSearchResults([]);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   return (
     <div className="event-search">
       <form onSubmit={handleSearch} className="search-form">
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search events by name..."
-          className="search-input"
-        />
-        <button 
-          type="submit" 
-          className="search-button"
-          disabled={isLoading}
-        >
-          {isLoading ? 'Searching...' : 'Search'}
-        </button>
+        <div className="search-input-container">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search events by name..."
+            className="search-input"
+          />
+          <button 
+            type="submit" 
+            className="search-button"
+            disabled={loading}
+          >
+            {loading ? 'Searching...' : 'Search'}
+          </button>
+        </div>
+        {error && <div className="search-error">{error}</div>}
       </form>
-      {error && <p className="search-error">{error}</p>}
     </div>
   );
 };

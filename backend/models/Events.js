@@ -6,7 +6,6 @@ const EventSchema = new mongoose.Schema({
     date: { type: Date, required: true },
     location: { type: String, required: true },
     category: { type: String, required: true },
-    image: { type: String }, // URL or file path for event image
     ticketPrice: { type: Number, required: true },
     totalTickets: { type: Number, required: true },
     remainingTickets: { type: Number, required: true },
