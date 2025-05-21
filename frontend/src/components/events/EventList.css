@@ -2,6 +2,7 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
+
 }
 
 .event-list-container h1 {
@@ -13,7 +14,9 @@
 .event-list {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
+    gap: 6rem 2rem;
+
+
 }
 
 .event-card {
