@@ -184,8 +184,79 @@ export const updateEventStatus = async (req, res) => {
 
 export const getApprovedEvents = async (req, res) => {
     try {
-        const events = await Event.find({ status: 'approved' })
-            .populate('organizer', 'name email');
+        const { category, date, priceRange, location } = req.query;
+        let query = { status: 'approved' };
+
+        // Add category filter
+        if (category) {
+            query.category = category;
+        }
+
+        // Add location filter
+        if (location) {
+            query.location = { $regex: location, $options: 'i' };
+        }
+
+        // Add date filter
+        if (date) {
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const nextWeek = new Date(now);
+            nextWeek.setDate(nextWeek.getDate() + 7);
+            const nextMonth = new Date(now);
+            nextMonth.setMonth(nextMonth.getMonth() + 1);
+
+            switch (date) {
+                case 'today':
+                    query.date = {
+                        $gte: new Date(now.setHours(0, 0, 0, 0)),
+                        $lt: new Date(now.setHours(23, 59, 59, 999))
+                    };
+                    break;
+                case 'tomorrow':
+                    query.date = {
+                        $gte: new Date(tomorrow.setHours(0, 0, 0, 0)),
+                        $lt: new Date(tomorrow.setHours(23, 59, 59, 999))
+                    };
+                    break;
+                case 'this-week':
+                    query.date = {
+                        $gte: now,
+                        $lt: nextWeek
+                    };
+                    break;
+                case 'this-month':
+                    query.date = {
+                        $gte: now,
+                        $lt: nextMonth
+                    };
+                    break;
+            }
+        }
+
+        // Add price range filter
+        if (priceRange) {
+            switch (priceRange) {
+                case 'free':
+                    query.ticketPrice = 0;
+                    break;
+                case 'under-50':
+                    query.ticketPrice = { $lt: 50 };
+                    break;
+                case '50-100':
+                    query.ticketPrice = { $gte: 50, $lte: 100 };
+                    break;
+                case 'over-100':
+                    query.ticketPrice = { $gt: 100 };
+                    break;
+            }
+        }
+
+        const events = await Event.find(query)
+            .populate('organizer', 'name email')
+            .sort({ date: 1 });
+
         res.status(200).json({
             success: true,
             count: events.length,
