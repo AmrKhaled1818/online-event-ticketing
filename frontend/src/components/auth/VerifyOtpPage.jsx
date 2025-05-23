@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './VerifyOtpPage.css';
+import './LoginPage.css';
 import api from '../../api/api';
 
 const VerifyOtpPage = () => {

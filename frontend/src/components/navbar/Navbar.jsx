@@ -28,7 +28,9 @@ const Navbar = () => {
 
       <div className="navbar-links">
         <NavLink to="/events">Events</NavLink>
+        {user && (user.role === 'organizer' || user.role === 'admin') && (
         <NavLink to="/my-events">My Events</NavLink>
+        )}
         {user && user.role === 'admin' && (
           <NavLink to="/admin/events">Admin</NavLink>
         )}

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './LogoutPage.css';
+import './LoginPage.css';
 
 const LogoutPage = () => {
     const navigate = useNavigate();
