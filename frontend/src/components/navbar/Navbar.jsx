@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import api from '../../api/api';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -14,22 +15,34 @@ const Navbar = () => {
     }
   }, []);
 
-  const handleLogout = () => {
-    // TODO: integrate with auth API
-    localStorage.removeItem('user'); // if you're storing a token
-    navigate('/logout');
+  const handleLogout = async () => {
+    try {
+      // First clear local storage
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      
+      // Then call the logout API
+      await api.post('/logout');
+      
+      // Force a page reload to clear any remaining state
+      window.location.href = '/login';
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Even if the API call fails, still redirect to login
+      window.location.href = '/login';
+    }
   };
 
   return (
     <nav className="navbar">
       <div className="navbar-logo" onClick={() => navigate('/')}>
-      TicketEase
+        TicketEase
       </div>
 
       <div className="navbar-links">
         <NavLink to="/events">Events</NavLink>
         {user && (user.role === 'organizer' || user.role === 'admin') && (
-        <NavLink to="/my-events">My Events</NavLink>
+          <NavLink to="/my-events">My Events</NavLink>
         )}
         {user && user.role === 'admin' && (
           <NavLink to="/admin/events">Admin</NavLink>

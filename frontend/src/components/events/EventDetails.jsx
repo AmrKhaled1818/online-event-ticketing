@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import './EventDetails.css';
 import { useParams } from 'react-router-dom';
 import api from '../../api/api';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const EventDetails = () => {
   const { id } = useParams();
@@ -37,11 +39,27 @@ const EventDetails = () => {
         eventId: event._id,
         quantity: quantity
       });
+      toast.success('Ticket booked successfully! 🎉', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
       setBookingMessage('Ticket booked successfully!');
       // Refresh event details to update remaining tickets
       const updatedEvent = await api.get(`/events/${id}`);
       setEvent(updatedEvent.data.data);
     } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to book ticket', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
       setError(err.response?.data?.message || 'Failed to book ticket');
     }
   };
@@ -52,6 +70,7 @@ const EventDetails = () => {
 
   return (
     <div className="event-details-container">
+      <ToastContainer />
       <div className="event-details-content">
         <div className="event-details-header">
           <h1>{event.title}</h1>

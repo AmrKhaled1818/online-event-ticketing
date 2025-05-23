@@ -6,6 +6,8 @@ import {
   useLocation,
   Navigate,
 } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import LoginPage from './components/auth/LoginPage';
 import RegisterPage from './components/auth/RegisterPage';
@@ -40,8 +42,19 @@ function AppRoutes() {
   return (
     <>
       {shouldShowNavbar && <Navbar />}
-        <ScrollToTop />
-
+      <ScrollToTop />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <Routes>
         {/* Redirect root to homepage */}
         <Route path="/" element={<HomePage />} />
@@ -69,7 +82,6 @@ function AppRoutes() {
         <Route path="/admin/users" element={<AdminUsersPage />} />
         <Route path="/termsandpolicy" element={<LegalFallback />} />
         <Route path="/termsandpolicy" element={<LegalFallback />} />
-
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" />} />

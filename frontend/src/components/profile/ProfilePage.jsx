@@ -1,7 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api/api';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './ProfilePage.css';
+
+// EyeIcon component with proper SVG icons
+const EyeIcon = ({ isVisible }) => (
+  <svg 
+    width="20" 
+    height="20" 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round"
+  >
+    {isVisible ? (
+      // Eye open icon
+      <>
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </>
+    ) : (
+      // Eye closed icon
+      <>
+        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+        <line x1="1" y1="1" x2="23" y2="23"/>
+      </>
+    )}
+  </svg>
+);
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -27,21 +57,23 @@ const ProfilePage = () => {
     confirmPassword: ''
   });
 
-  const loadProfile = async () => {
+  const loadProfile = useCallback(async () => {
     try {
       setLoading(true);
       const response = await api.get('/users/profile');
       if (response.data.success) {
         const fetchedUser = response.data.data;
         setUser(fetchedUser);
-        setFormData({
-          name: fetchedUser.name,
-          email: fetchedUser.email,
+        setFormData(prevData => ({
+          ...prevData,
+          name: fetchedUser.name || '',
+          email: fetchedUser.email || '',
           profilePicture: fetchedUser.profilePicture || '',
+          // Keep password fields empty
           currentPassword: '',
           newPassword: '',
           confirmPassword: ''
-        });
+        }));
 
         if (fetchedUser.role === 'user') {
           const bookingRes = await api.get('/users/bookings');
@@ -60,25 +92,41 @@ const ProfilePage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [navigate]);
 
   useEffect(() => {
     loadProfile();
-  }, [navigate]);
+  }, [loadProfile]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    console.log(`Input change - Field: ${name}, Value: ${value}`); // Debug log
+    
+    // Special handling for password fields
+    if (name === 'currentPassword' || name === 'newPassword' || name === 'confirmPassword') {
+      console.log(`Password field ${name} being updated with value: ${value}`);
+    }
+    
+    setFormData(prevData => {
+      const newData = {
+        ...prevData,
+        [name]: value
+      };
+      console.log('Updated form data:', newData);
+      return newData;
+    });
   };
 
   const togglePasswordVisibility = (field) => {
+    console.log(`Toggling password visibility for: ${field}`); // Debug log
     setShowPasswords(prev => ({
       ...prev,
       [field]: !prev[field]
     }));
+  };
+
+  const handleFocus = (field) => {
+    console.log(`Focused on ${field}`); // Debug log to confirm focus
   };
 
   const handleSubmit = async (e) => {
@@ -86,9 +134,20 @@ const ProfilePage = () => {
     setError('');
     setSuccess('');
 
-    if (formData.newPassword) {
+    console.log('Form data at submit:', formData); // Debug log
+
+    // Password validation
+    if (formData.newPassword || formData.confirmPassword) {
       if (!formData.currentPassword) {
-        setError('Current password is required');
+        setError('Current password is required to change password');
+        return;
+      }
+      if (!formData.newPassword) {
+        setError('New password is required');
+        return;
+      }
+      if (!formData.confirmPassword) {
+        setError('Please confirm your new password');
         return;
       }
       if (formData.newPassword !== formData.confirmPassword) {
@@ -108,16 +167,20 @@ const ProfilePage = () => {
         profilePicture: formData.profilePicture
       };
 
+      // Only include password fields if they're being changed
       if (formData.newPassword) {
         updateData.currentPassword = formData.currentPassword;
         updateData.newPassword = formData.newPassword;
       }
+
+      console.log('Sending update data:', updateData); // Debug log
 
       const response = await api.put('/users/profile', updateData);
       if (response.data.success) {
         setSuccess('Profile updated successfully');
         await loadProfile();
         setIsEditing(false);
+        // Clear password fields after successful update
         setFormData(prev => ({
           ...prev,
           currentPassword: '',
@@ -128,6 +191,7 @@ const ProfilePage = () => {
         setError('Failed to update profile');
       }
     } catch (err) {
+      console.error('Update error:', err); // Debug log
       setError(err.response?.data?.message || 'Failed to update profile');
     }
   };
@@ -140,14 +204,35 @@ const ProfilePage = () => {
   const confirmCancelBooking = async () => {
     try {
       await api.delete(`/bookings/${selectedBooking._id}`);
-      setSuccess('Booking cancelled successfully');
-      await loadProfile();
+      toast.success('Booking cancelled successfully!', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      setBookings(prevBookings => prevBookings.filter(booking => booking._id !== selectedBooking._id));
+      setShowConfirmModal(false);
+      setSelectedBooking(null);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to cancel booking');
+      toast.error(err.response?.data?.message || 'Failed to cancel booking', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      setShowConfirmModal(false);
+      setSelectedBooking(null);
     }
-    setShowConfirmModal(false);
-    setSelectedBooking(null);
   };
+
+  // Add this effect to monitor form data changes
+  useEffect(() => {
+    console.log('Form data state updated:', formData);
+  }, [formData]);
 
   if (loading) {
     return (
@@ -167,16 +252,16 @@ const ProfilePage = () => {
 
   return (
     <div className="profile-page-wrapper">
+      <ToastContainer />
       <div className="profile-container">
         {/* Profile Card */}
         <div className="profile-card">
           <div className="profile-picture-container">
             <img 
-            src={`https://ui-avatars.com/api/?name=${user.name}&background=8E1616&color=fff&size=128`} 
-            alt="User Icon"
-            className="profile-picture"
+              src={`https://ui-avatars.com/api/?name=${user.name}&background=8E1616&color=fff&size=128`} 
+              alt="User Icon"
+              className="profile-picture"
             />
-
             {isEditing && (
               <button className="profile-picture-edit">
                 ✏️
@@ -194,6 +279,15 @@ const ProfilePage = () => {
               setIsEditing(!isEditing);
               setError('');
               setSuccess('');
+              // Reset password fields when canceling edit
+              if (isEditing) {
+                setFormData(prev => ({
+                  ...prev,
+                  currentPassword: '',
+                  newPassword: '',
+                  confirmPassword: ''
+                }));
+              }
             }}
           >
             {isEditing ? 'Cancel Editing' : 'Edit Profile'}
@@ -215,8 +309,9 @@ const ProfilePage = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
+                    onFocus={() => handleFocus('name')}
                     disabled={!isEditing}
-                    className="form-input"
+                    className={`form-input ${!isEditing ? 'disabled' : ''}`}
                     placeholder="Enter your full name"
                     required
                   />
@@ -229,8 +324,9 @@ const ProfilePage = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
+                    onFocus={() => handleFocus('email')}
                     disabled={!isEditing}
-                    className="form-input"
+                    className={`form-input ${!isEditing ? 'disabled' : ''}`}
                     placeholder="Enter your email"
                     required
                   />
@@ -244,6 +340,7 @@ const ProfilePage = () => {
                       name="profilePicture"
                       value={formData.profilePicture}
                       onChange={handleInputChange}
+                      onFocus={() => handleFocus('profilePicture')}
                       className="form-input"
                       placeholder="https://example.com/your-photo.jpg"
                     />
@@ -255,7 +352,7 @@ const ProfilePage = () => {
                 <div className="password-section">
                   <h3>Change Password</h3>
                   
-                  <div className="form-grid">
+                  <div className="form-grid password-grid">
                     <div className="form-group">
                       <label className="form-label">Current Password</label>
                       <div className="password-input-group">
@@ -264,15 +361,18 @@ const ProfilePage = () => {
                           name="currentPassword"
                           value={formData.currentPassword}
                           onChange={handleInputChange}
+                          onFocus={() => handleFocus('currentPassword')}
                           className="form-input"
                           placeholder="Enter current password"
+                          autoComplete="current-password"
                         />
                         <button
                           type="button"
                           className="toggle-password"
                           onClick={() => togglePasswordVisibility('current')}
+                          tabIndex="-1"
                         >
-                          {showPasswords.current ? "Hide" : "Show"}
+                          <EyeIcon isVisible={showPasswords.current} />
                         </button>
                       </div>
                     </div>
@@ -285,20 +385,23 @@ const ProfilePage = () => {
                           name="newPassword"
                           value={formData.newPassword}
                           onChange={handleInputChange}
+                          onFocus={() => handleFocus('newPassword')}
                           className="form-input"
                           placeholder="Enter new password"
+                          autoComplete="new-password"
                         />
                         <button
                           type="button"
                           className="toggle-password"
                           onClick={() => togglePasswordVisibility('new')}
+                          tabIndex="-1"
                         >
-                          {showPasswords.new ? "Hide" : "Show"}
+                          <EyeIcon isVisible={showPasswords.new} />
                         </button>
                       </div>
                     </div>
 
-                    <div className="form-group full-width">
+                    <div className="form-group">
                       <label className="form-label">Confirm New Password</label>
                       <div className="password-input-group">
                         <input
@@ -306,15 +409,18 @@ const ProfilePage = () => {
                           name="confirmPassword"
                           value={formData.confirmPassword}
                           onChange={handleInputChange}
+                          onFocus={() => handleFocus('confirmPassword')}
                           className="form-input"
                           placeholder="Confirm new password"
+                          autoComplete="new-password"
                         />
                         <button
                           type="button"
                           className="toggle-password"
                           onClick={() => togglePasswordVisibility('confirm')}
+                          tabIndex="-1"
                         >
-                          {showPasswords.confirm ? "Hide" : "Show"}
+                          <EyeIcon isVisible={showPasswords.confirm} />
                         </button>
                       </div>
                     </div>

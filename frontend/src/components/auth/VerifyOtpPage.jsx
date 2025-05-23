@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import './LoginPage.css';
 import api from '../../api/api';
+import Loader from '../common/Loader';
 
 const VerifyOtpPage = () => {
     const [otp, setOtp] = useState(['', '', '', '', '', '']);
     const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const inputRefs = useRef([]);
 
@@ -41,33 +43,46 @@ const VerifyOtpPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-        setSuccess('');
+        setLoading(true);
 
         const otpString = otp.join('');
         if (otpString.length !== 6) {
             setError('Please enter all 6 digits');
+            toast.error('Please enter all 6 digits');
+            setLoading(false);
             return;
         }
 
         try {
             const email = localStorage.getItem('resetEmail');
-            const response = await api.post('/verifyOtp', { email, otp: otpString });
-            setSuccess('OTP verified successfully!');
+            if (!email) {
+                throw new Error('Email not found. Please try the forgot password process again.');
+            }
+
+            const response = await api.put('/verifyOtp', { email, otp: otpString });
+            toast.success('OTP verified successfully!');
             
             // Store reset token for the next step
-            localStorage.setItem('resetToken', response.data.resetToken);
+            if (response.data?.resetToken) {
+                localStorage.setItem('resetToken', response.data.resetToken);
+            }
             
-            // Redirect to reset password page after 2 seconds
+            // Add artificial delay
             setTimeout(() => {
                 navigate('/reset-password');
-            }, 2000);
+            }, 1500);
         } catch (err) {
-            setError(err.response?.data?.message || 'Invalid OTP. Please try again.');
+            const errorMessage = err.response?.data?.message || 'Failed to verify OTP. Please try again.';
+            setError(errorMessage);
+            toast.error(errorMessage);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <div className="verify-wrapper">
+            <Loader loading={loading} message="Verifying OTP..." />
             <video autoPlay muted loop className="video-background">
                 <source src="/background.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
@@ -77,7 +92,6 @@ const VerifyOtpPage = () => {
                 <form className="verify-form" onSubmit={handleSubmit}>
                     <h2>Verify OTP</h2>
                     {error && <p className="error-message">{error}</p>}
-                    {success && <p className="success-message">{success}</p>}
                     <p className="otp-instruction">Enter the 6-digit code sent to your email</p>
                     
                     <div className="otp-inputs">
@@ -95,7 +109,7 @@ const VerifyOtpPage = () => {
                         ))}
                     </div>
                     
-                    <button type="submit">Verify OTP</button>
+                    <button type="submit" disabled={loading}>Verify OTP</button>
                     <div className="link-container">
                         <a href="/forgot-password">Back to Forgot Password</a>
                     </div>

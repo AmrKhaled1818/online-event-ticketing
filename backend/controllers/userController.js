@@ -76,8 +76,24 @@ const loginUser = async (req, res) => {
 
 // Logout user (clears cookie)
 const logoutUser = async (req, res) => {
-  res.clearCookie('token');
-  res.json({ message: 'Logged out successfully' });
+  try {
+    // Clear the token cookie
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict'
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Logged out successfully'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error logging out'
+    });
+  }
 };
 
 // Get current user's profile

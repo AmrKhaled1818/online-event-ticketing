@@ -2,22 +2,42 @@ import React from 'react';
 import './BookingCard.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const BookingCard = ({ booking }) => {
+const BookingCard = ({ booking, onBookingCancelled }) => {
     const navigate = useNavigate();
 
     const handleCancel = async () => {
         try {
             await axios.delete(`/api/bookings/${booking._id}`, { withCredentials: true });
-            alert('Booking cancelled');
-            window.location.reload(); // Refresh the page
+            toast.success('Booking cancelled successfully!', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+            // Call the callback to update the parent component
+            if (onBookingCancelled) {
+                onBookingCancelled(booking._id);
+            }
         } catch (err) {
-            alert('Failed to cancel booking');
+            toast.error('Failed to cancel booking', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
     return (
         <div className="booking-card">
+            <ToastContainer />
             <h3>{booking.event?.title || booking.eventTitle}</h3>
             <p><strong>Quantity:</strong> {booking.ticketsBooked}</p>
             <p><strong>Total:</strong> {booking.totalPrice} EGP</p>

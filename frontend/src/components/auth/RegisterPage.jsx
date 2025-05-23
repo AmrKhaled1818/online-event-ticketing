@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import './LoginPage.css';
 import axios from 'axios';
+import Loader from '../common/Loader';
 
 const RegisterPage = () => {
     const [formData, setFormData] = useState({
@@ -12,7 +14,7 @@ const RegisterPage = () => {
         role: 'user',
     });
     const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -23,26 +25,33 @@ const RegisterPage = () => {
         e.preventDefault();
         if (formData.password !== formData.confirmPassword) {
             setError('Passwords do not match');
+            toast.error('Passwords do not match');
             return;
         }
 
+        setLoading(true);
         try {
             const response = await axios.post('/api/v1/register', formData);
             console.log('Register success:', response.data);
-            setSuccess('Registration successful! Please log in.');
+            toast.success('Registration successful! Please log in.');
             setError('');
             
-            // Redirect after 2 seconds
+            // Add artificial delay
             setTimeout(() => {
                 navigate('/login');
-            }, 2000);
+            }, 1500);
         } catch (err) {
-            setError(err.response?.data?.message || 'Registration failed');
+            const errorMessage = err.response?.data?.message || 'Registration failed';
+            setError(errorMessage);
+            toast.error(errorMessage);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <div className="register-wrapper">
+            <Loader loading={loading} message="Creating your account..." />
             <video autoPlay muted loop className="video-background">
                 <source src="/background.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
@@ -50,9 +59,8 @@ const RegisterPage = () => {
 
             <div className="register-container">
                 <form className="register-form" onSubmit={handleRegister}>
-                    <h2>Register</h2>
+                    <h2>Create Account</h2>
                     {error && <p className="error-message">{error}</p>}
-                    {success && <p className="success-message">{success}</p>}
                     <input
                         type="text"
                         name="name"
@@ -90,7 +98,7 @@ const RegisterPage = () => {
                         <option value="organizer">Event Organizer</option>
                         <option value="admin">Admin</option>
                     </select>
-                    <button type="submit">Register</button>
+                    <button type="submit" disabled={loading}>Register</button>
                     <div className="link-container">
                         <a href="/login">Already have an account?</a>
                     </div>

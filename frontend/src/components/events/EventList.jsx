@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import EventCard from './EventCard';
 import api from '../../api/api';
 import './EventList.css';

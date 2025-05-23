@@ -11,6 +11,7 @@ import {
   forgotPassword,
   verifyOtp,
   resetPassword,
+  logoutUser
 } from "../controllers/userController.js";
 import { getBookings } from "../controllers/bookingController.js";
 import { protect, restrictTo } from "../middleware/authMiddleware.js";
@@ -24,6 +25,7 @@ router.get("/users/events", protect, restrictTo("organizer"), getUserEvents);
 // Public routes
 router.post("/register", registerUser); // /api/v1/register (POST) - Public
 router.post("/login", loginUser); // /api/v1/login (POST) - Public
+router.post("/logout", logoutUser);
 router.put("/forgetPassword", forgotPassword); // /api/v1/forgetPassword (PUT) - Public
 
 // Protected routes (require authentication)

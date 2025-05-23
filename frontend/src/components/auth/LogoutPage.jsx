@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import axios from 'axios';
+import api from '../../api/api';
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
 
@@ -9,13 +9,19 @@ const LogoutPage = () => {
     useEffect(() => {
         const logout = async () => {
             try {
-                await axios.post('/api/auth/logout', {}, { withCredentials: true });
-                console.log('Logged out');
+                // First clear local storage
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                
+                // Then call the logout API
+                await api.post('/logout');
+                
+                // Force a page reload to clear any remaining state
+                window.location.href = '/login';
             } catch (error) {
                 console.error('Logout failed', error);
-            } finally {
-                // Clear any user context or local storage here if needed
-                navigate('/login');
+                // Even if the API call fails, still redirect to login
+                window.location.href = '/login';
             }
         };
 
