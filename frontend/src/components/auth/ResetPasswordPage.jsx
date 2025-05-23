@@ -25,16 +25,17 @@ const ResetPasswordPage = () => {
         }
 
         try {
-            const email = localStorage.getItem('resetEmail');
-            if (!email) {
-                throw new Error('Email not found. Please try the forgot password process again.');
+            const resetToken = localStorage.getItem('resetToken');
+            if (!resetToken) {
+                throw new Error('Reset token not found. Please try the forgot password process again.');
             }
 
-            await api.put('/resetPassword', { email, password });
+            await api.put('/resetPassword', { resetToken, password });
             toast.success('Password reset successful!');
             
-            // Clear stored email
+            // Clear stored data
             localStorage.removeItem('resetEmail');
+            localStorage.removeItem('resetToken');
             
             // Add artificial delay
             setTimeout(() => {
