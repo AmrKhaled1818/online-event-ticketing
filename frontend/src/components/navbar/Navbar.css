@@ -1,52 +1,62 @@
+:root {
+  --primary-dark: #1D1616;
+  --accent-maroon: #8E1616;
+  --highlight-red: #D84040;
+  --light-gray: #EEEEEE;
+  --font-main: 'Segoe UI', sans-serif;
+}
+
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background: #1e293b;
-    color: white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  .navbar-logo {
-    font-size: 1.3rem;
-    font-weight: 700;
-    cursor: pointer;
-  }
-  
-  .navbar-links {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-  }
-  
-  .navbar-links a {
-    color: #cbd5e1;
-    text-decoration: none;
-    font-weight: 500;
-    padding: 0.5rem;
-    border-radius: 6px;
-    transition: background 0.3s ease;
-  }
-  
-  .navbar-links a:hover,
-  .navbar-links a.active {
-    background: #334155;
-    color: white;
-  }
-  
-  .logout-btn {
-    background: #ef4444;
-    border: none;
-    padding: 0.45rem 0.8rem;
-    border-radius: 6px;
-    color: white;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background 0.3s ease;
-  }
-  
-  .logout-btn:hover {
-    background: #dc2626;
-  }
-  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: var(--primary-dark);
+  color: var(--light-gray);
+  font-family: var(--font-main);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.navbar-logo {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--highlight-red);
+  cursor: pointer;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.navbar-links {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.navbar-links a {
+  color: var(--light-gray);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.navbar-links a:hover,
+.navbar-links a.active {
+  background: var(--accent-maroon);
+  color: white;
+}
+
+.logout-btn {
+  background: var(--highlight-red);
+  border: none;
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: var(--accent-maroon);
+}

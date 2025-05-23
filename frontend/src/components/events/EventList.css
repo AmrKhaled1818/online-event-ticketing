@@ -1,17 +1,112 @@
+:root {
+  --primary-dark: #1D1616;
+  --accent-maroon: #8E1616;
+  --highlight-red: #D84040;
+  --light-gray: #EEEEEE;
+  --font-main: 'Segoe UI', sans-serif;
+}
+
 .event-list-wrapper {
-    padding: 2rem;
-    text-align: center;
-    background-color: #f9f9f9;
-    min-height: 100vh;
-    box-sizing: border-box;
+  padding: 3rem 2rem;
+  background-color: var(--light-gray);
+  min-height: 100vh;
+  font-family: var(--font-main);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.event-list-wrapper h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: var(--primary-dark);
+}
+
+.event-search-panel {
+  background: white;
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2.5rem;
+  width: 100%;
+  max-width: 900px;
+  box-sizing: border-box;
+}
+
+.search-row {
+  position: relative;
+  width: 100%;
+  margin-bottom: 1.25rem;;
+}
+
+.search-row input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.75rem;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.3s ease;
+  box-sizing: border-box;
+}
+
+
+.search-row input:focus {
+  border-color: var(--highlight-red);
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.filters-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.filters-row select {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  background-color: #fefefe;
+  color: var(--primary-dark);
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.filters-row select:focus {
+  border-color: var(--highlight-red);
+}
+
+.reset-btn {
+  background: var(--accent-maroon);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.25rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.reset-btn:hover {
+  background: var(--highlight-red);
 }
 
 .event-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    max-width: 1300px;
-    margin: 0 auto;
-    padding: 1rem;
-    box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+  gap: 2.5rem;
+  width: 100%;
+  max-width: 1300px;
+  padding: 0 1rem;
+  box-sizing: border-box;
 }
