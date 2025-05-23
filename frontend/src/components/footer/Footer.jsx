@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './Footer.css';
 
 const Footer = () => {
@@ -26,7 +27,6 @@ const Footer = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission
     console.log('Form submitted with interests:', selectedInterests, 'budget:', selectedBudget);
   };
 
@@ -100,11 +100,11 @@ const Footer = () => {
       <div className="footer-bottom">
         <p>&copy; {new Date().getFullYear()} Eventure. All rights reserved.</p>
         <div className="footer-links">
-          <a href="/events">Events</a>
-          <a href="/profile">Profile</a>
-          <a href="/my-events">My Events</a>
-          <a href="/privacy">Privacy Policy</a>
-          <a href="/terms">Terms of Service</a>
+          <Link to="/events">Events</Link>
+          <Link to="/profile">Profile</Link>
+          <Link to="/my-events">My Events</Link>
+          <Link to="/termsandpolicy">Privacy Policy</Link>
+          <Link to="/termsandpolicy">Terms of Service</Link>
         </div>
       </div>
     </footer>

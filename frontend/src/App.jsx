@@ -26,6 +26,8 @@ import AdminUsersPage from './components/admin/AdminUsersPage';
 import Navbar from './components/navbar/Navbar';
 import Footer from './components/footer/Footer';
 import HomePage from './components/home/Home';
+import LegalFallback from './components/Terms.jsx';
+import ScrollToTop from './components/ScrollToTop'; // adjust path as needed
 
 // Simple auth check (can be replaced later with proper context)
 const isAuthenticated = document.cookie.includes('token=') || localStorage.getItem('token');
@@ -38,6 +40,7 @@ function AppRoutes() {
   return (
     <>
       {shouldShowNavbar && <Navbar />}
+        <ScrollToTop />
 
       <Routes>
         {/* Redirect root to homepage */}
@@ -64,6 +67,9 @@ function AppRoutes() {
         <Route path="/my-events/analytics" element={<EventAnalytics />} />
         <Route path="/admin/events" element={<AdminEventsPage />} />
         <Route path="/admin/users" element={<AdminUsersPage />} />
+        <Route path="/termsandpolicy" element={<LegalFallback />} />
+        <Route path="/termsandpolicy" element={<LegalFallback />} />
+
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" />} />
