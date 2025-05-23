@@ -28,17 +28,21 @@ const MyEventsPage = () => {
     <div className="my-events-page">
       <h2>My Events</h2>
       <div className="action-buttons">
-        <button
-          className="new-event-btn"
-          onClick={() => navigate('/my-events/new')}
-        >
-          ➕ Create New Event
+        <button className="new-event-btn" onClick={() => navigate('/my-events/new')}>
+          <span className="icon-text">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+              <path d="M13 11h8v2h-8v8h-2v-8H3v-2h8V3h2v8z" />
+            </svg>
+            Create New Event
+          </span>
         </button>
-        <button
-          className="analytics-btn"
-          onClick={() => navigate('/my-events/analytics')}
-        >
-          📊 View Analytics
+        <button className="analytics-btn" onClick={() => navigate('/my-events/analytics')}>
+          <span className="icon-text">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+              <path d="M3 17h2v-7H3v7zm4 0h2V7H7v10zm4 0h2v-4h-2v4zm4 0h2V4h-2v13zm4 0h2v-9h-2v9z" />
+            </svg>
+            View Analytics
+          </span>
         </button>
       </div>
 
@@ -49,16 +53,27 @@ const MyEventsPage = () => {
           events.map((event) => (
             <div key={event._id} className="event-item">
               <EventCard event={event} />
-
               <div className="event-actions">
                 <button onClick={() => navigate(`/my-events/${event._id}/edit`)}>
-                  ✏️ Edit
+                  <span className="icon-text dark-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 
+                      7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 
+                      1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z" />
+                    </svg>
+                    Edit
+                  </span>
                 </button>
-                <button
-                  className="delete-btn"
-                  onClick={() => handleDelete(event._id)}
-                >
-                  🗑️ Delete
+                <button className="delete-btn" onClick={() => handleDelete(event._id)}>
+                  <span className="icon-text">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                      <path d="M16 9v10H8V9h8m-1.5-6h-5l-1 
+                      1H5v2h14V4h-4.5l-1-1zM18 7H6v12c0 
+                      1.1.9 2 2 2h8c1.1 0 2-.9 
+                      2-2V7z" />
+                    </svg>
+                    Delete
+                  </span>
                 </button>
               </div>
             </div>

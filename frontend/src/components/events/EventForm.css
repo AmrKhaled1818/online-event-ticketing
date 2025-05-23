@@ -1,100 +1,104 @@
-.event-form-wrapper {
-    max-width: 600px;
-    margin: 4rem auto;
-    padding: 2rem;
-    border-radius: 16px;
-    background-color: #ffffff;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
-    font-family: 'Segoe UI', sans-serif;
-  }
-  
-  .event-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .event-form h2 {
-    text-align: center;
-    margin-bottom: 2rem;
-    font-size: 1.6rem;
-    color: #0f172a;
-    font-weight: 700;
-  }
-  
-  .event-form input,
-  .event-form textarea,
-  .event-form select {
-    width: 100%;
-    max-width: 520px;
-    padding: 0.65rem 1rem;
-    margin-bottom: 1.2rem;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    background-color: #f9fafb;
-    transition: border 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .event-form textarea {
-    resize: vertical;
-    min-height: 120px;
-  }
-  
-  .event-form input:focus,
-  .event-form textarea:focus,
-  .event-form select:focus {
-    outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
-    background-color: #fff;
-  }
-  
-  .event-form button {
-    width: 100%;
-    max-width: 520px;
-    padding: 0.9rem;
-    background: linear-gradient(to right, #3b82f6, #2563eb);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  
-  .event-form button:hover {
-    background: linear-gradient(to right, #2563eb, #1e40af);
-  }
-  
-  /* Loading and error states */
-  .event-form-wrapper.loading,
-  .event-form-wrapper.error {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 300px;
-    text-align: center;
-    font-size: 1.2rem;
-  }
-  
-  .event-form-wrapper.loading {
-    color: #3b82f6;
-  }
-  
-  .event-form-wrapper.error {
-    color: #ef4444;
-  }
+:root {
+  --primary-dark: #1D1616;
+  --accent-maroon: #8E1616;
+  --highlight-red: #D84040;
+  --light-gray: #EEEEEE;
+  --font-main: 'Segoe UI', sans-serif;
+}
 
-  /* Add a pulsing animation for the loading state */
-  @keyframes pulse {
-    0% { opacity: 0.6; }
-    50% { opacity: 1; }
-    100% { opacity: 0.6; }
-  }
-  
-  .event-form-wrapper.loading {
-    animation: pulse 1.5s infinite ease-in-out;
-  }
-  
+.event-form-wrapper {
+  max-width: 640px;
+  margin: 4rem auto;
+  padding: 2.5rem;
+  border-radius: 16px;
+  background-color: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  font-family: var(--font-main);
+  color: var(--primary-dark);
+}
+
+.event-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.event-form h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: var(--accent-maroon);
+  text-align: center;
+}
+
+.event-form input,
+.event-form textarea,
+.event-form select {
+  width: 100%;
+  max-width: 520px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.2rem;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 1rem;
+  background-color: var(--light-gray);
+  color: var(--primary-dark);
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.event-form textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.event-form input:focus,
+.event-form textarea:focus,
+.event-form select:focus {
+  outline: none;
+  border-color: var(--highlight-red);
+  box-shadow: 0 0 0 3px rgba(216, 64, 64, 0.2);
+  background-color: white;
+}
+
+.event-form button {
+  width: 100%;
+  max-width: 520px;
+  padding: 0.9rem;
+  background: linear-gradient(to right, var(--highlight-red), var(--accent-maroon));
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.event-form button:hover {
+  background: linear-gradient(to right, var(--accent-maroon), var(--primary-dark));
+}
+
+.event-form-wrapper.loading,
+.event-form-wrapper.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.event-form-wrapper.loading {
+  color: var(--highlight-red);
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.event-form-wrapper.error {
+  color: var(--accent-maroon);
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}

@@ -14,16 +14,21 @@ const EventList = () => {
 
   useEffect(() => {
     const fetchEvents = async () => {
-      try {
-        const response = await api.get('/events');
-        setEvents(response.data);
-      } catch (err) {
-        console.error('Error fetching events:', err);
-        setError('Failed to load events');
-      } finally {
-        setLoading(false);
-      }
-    };
+  try {
+    const response = await api.get('/events');
+    const eventList = Array.isArray(response.data)
+      ? response.data
+      : response.data?.data || []; // fallback to [] if not valid
+
+    setEvents(eventList);
+  } catch (err) {
+    console.error('Error fetching events:', err);
+    setError('Failed to load events');
+  } finally {
+    setLoading(false);
+  }
+};
+
     fetchEvents();
   }, []);
 

@@ -1,138 +1,149 @@
-.profile-wrapper {
-    padding: 4rem 1rem;
-    min-height: 100vh;
-    background: #f9fafb;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    font-family: 'Segoe UI', sans-serif;
-  }
-  
-  .profile-card {
-    background: white;
-    padding: 2rem 2.5rem;
-    border-radius: 16px;
-    max-width: 420px;
-    width: 100%;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-    text-align: center;
-  }
-  
-  .profile-card h2 {
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-    color: #1f2937;
-  }
-  
-  .profile-card p {
-    font-size: 1rem;
-    margin: 0.75rem 0;
-    color: #374151;
-  }
-  
-  .profile-label {
-    font-weight: 600;
-    color: #6b7280;
-    display: block;
-    margin-bottom: 0.2rem;
-  }
-  
-  .profile-value {
-    font-weight: 500;
-    color: #111827;
-  }
-  
-  .profile-card button {
-    margin-top: 2rem;
-    padding: 0.75rem 1.5rem;
-    background-color: #3b82f6;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  
-  .profile-card button:hover {
-    background-color: #2563eb;
-  }
-  
+/* Modern Profile Page Styles */
+.profile-page-wrapper {
+  min-height: 50vh;
+  background: #EEEEEE;
+  padding: 2rem 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
 .profile-container {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.profile-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-}
-
-.profile-header h1 {
-  margin: 0;
-  color: #333;
-}
-
-.edit-button {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 5px;
-  background: #007bff;
-  color: white;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.edit-button:hover {
-  background: #0056b3;
-}
-
-.edit-button.cancel {
-  background: #dc3545;
-}
-
-.edit-button.cancel:hover {
-  background: #c82333;
-}
-
-.profile-content {
+  max-width: 1200px;
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: 350px 1fr;
   gap: 2rem;
+  align-items: start;
 }
 
-.profile-picture-section {
+/* Profile Card */
+.profile-card {
+  background: white;
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
   text-align: center;
+  position: sticky;
+  top: 2rem;
+}
+
+.profile-picture-container {
+  position: relative;
+  margin-bottom: 1.5rem;
 }
 
 .profile-picture {
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 1rem;
-  border: 3px solid #007bff;
+  border: 4px solid #f0f0f0;
+  margin: 0 auto;
+  display: block;
 }
 
-.profile-picture-input {
+.profile-picture-edit {
+  position: absolute;
+  bottom: 0;
+  right: calc(50% - 60px + 15px);
+  background: #1D1616;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.profile-picture-edit:hover {
+  background: #8E1616;
+  transform: scale(1.1);
+}
+
+.profile-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1D1616;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.profile-email {
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.profile-role {
+  display: inline-block;
+  background: rgba(142, 22, 22, 0.1);
+  color: #8E1616;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: capitalize;
+  margin-bottom: 2rem;
+}
+
+.edit-profile-btn {
+  background: #1D1616;
+  color: white;
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: 50px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
   width: 100%;
-  padding: 0.5rem;
-  margin-top: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 5px;
 }
 
-.profile-form {
+.edit-profile-btn:hover {
+  background: #8E1616;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(29, 22, 22, 0.15);
+}
+
+.edit-profile-btn.cancel {
+  background: #6c757d;
+}
+
+.edit-profile-btn.cancel:hover {
+  background: #5a6268;
+}
+
+/* Main Content */
+.profile-main-content {
   display: flex;
   flex-direction: column;
+  gap: 2rem;
+}
+
+/* Profile Form Card */
+.profile-form-card {
+  background: white;
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1D1616;
+  margin-bottom: 2rem;
+  letter-spacing: -0.02em;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .form-group {
@@ -141,179 +152,203 @@
   gap: 0.5rem;
 }
 
-.form-group label {
-  font-weight: 600;
-  color: #555;
+.form-group.full-width {
+  grid-column: 1 / -1;
 }
 
-.form-group input {
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+.form-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #1D1616;
+}
+
+.form-input {
+  padding: 1rem;
+  border: 2px solid #f0f0f0;
+  border-radius: 12px;
   font-size: 1rem;
+  transition: all 0.3s ease;
+  background: white;
+  color: #1D1616;
 }
 
-.form-group input:disabled {
-  background: #f5f5f5;
+.form-input:focus {
+  outline: none;
+  border-color: #8E1616;
+  box-shadow: 0 0 0 3px rgba(142, 22, 22, 0.1);
+}
+
+.form-input:disabled {
+  background: #f8f9fa;
+  color: #6c757d;
   cursor: not-allowed;
 }
 
-.role-input {
-  background: #f5f5f5 !important;
-  color: #666;
+.form-input::placeholder {
+  color: #999;
 }
 
+/* Password Section */
 .password-section {
+  background: #f8f9fa;
+  border-radius: 16px;
+  padding: 1.5rem;
   margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid #ddd;
 }
 
 .password-section h3 {
-  margin-bottom: 1rem;
-  color: #333;
-}
-
-.error-message {
-  color: #dc3545;
-  padding: 0.5rem;
-  background: #f8d7da;
-  border-radius: 5px;
-  margin-top: 1rem;
-}
-
-.save-button {
-  padding: 0.75rem 1.5rem;
-  background: #28a745;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.3s;
-}
-
-.save-button:hover {
-  background: #218838;
-}
-
-.loading {
-  text-align: center;
-  padding: 2rem;
-  color: #666;
-}
-
-.error {
-  text-align: center;
-  padding: 2rem;
-  color: #dc3545;
-}
-
-.success-message {
-  color: #28a745;
-  padding: 0.5rem;
-  background: #d4edda;
-  border-radius: 5px;
-  margin-top: 1rem;
-}
-
-@media (max-width: 768px) {
-  .profile-content {
-    grid-template-columns: 1fr;
-  }
-
-  .profile-picture-section {
-    margin-bottom: 2rem;
-  }
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1D1616;
+  margin-bottom: 1.5rem;
 }
 
 .password-input-group {
   position: relative;
-  display: flex;
-  align-items: center;
 }
 
-.password-input-group input {
-  flex: 1;
+.password-input-group .form-input {
   padding-right: 3rem;
 }
 
 .toggle-password {
   position: absolute;
-  right: 0.5rem;
-  padding: 0.25rem 0.5rem;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
   background: none;
   border: none;
   color: #666;
   cursor: pointer;
-  font-size: 0.875rem;
-  transition: color 0.2s;
+  font-size: 0.85rem;
+  padding: 0.25rem;
+  transition: color 0.3s ease;
 }
 
 .toggle-password:hover {
-  color: #007bff;
+  color: #8E1616;
 }
 
-.bookings-section {
+/* Messages */
+.message {
+  padding: 1rem;
+  border-radius: 12px;
+  margin: 1rem 0;
+  font-weight: 500;
+}
+
+.error-message {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.success-message {
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
   margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid #ddd;
 }
 
-.bookings-section h2 {
-  margin-bottom: 1.5rem;
-  color: #333;
+.save-btn {
+  background: #8E1616;
+  color: white;
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: 50px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.save-btn:hover {
+  background: #1D1616;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(142, 22, 22, 0.15);
+}
+
+/* Bookings Section */
+.bookings-card {
+  background: white;
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+.bookings-grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.booking-item {
+  background: #f8f9fa;
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+
+.booking-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.booking-info h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1D1616;
+  margin-bottom: 0.5rem;
+}
+
+.booking-info p {
+  color: #666;
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.booking-price {
+  font-weight: 600;
+  color: #8E1616;
+  font-size: 1rem;
+}
+
+.cancel-booking-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.cancel-booking-btn:hover {
+  background: #c82333;
+  transform: translateY(-1px);
 }
 
 .no-bookings {
   text-align: center;
   color: #666;
-  padding: 1rem;
+  padding: 3rem 1rem;
+  font-style: italic;
 }
 
-.bookings-list {
-  display: grid;
-  gap: 1rem;
-}
-
-.booking-card {
-  background: #f8f9fa;
-  border-radius: 8px;
-  padding: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-}
-
-.booking-info {
-  flex: 1;
-}
-
-.booking-info h3 {
-  margin: 0 0 0.5rem 0;
-  color: #333;
-}
-
-.booking-info p {
-  margin: 0.25rem 0;
-  color: #666;
-}
-
-.cancel-booking-button {
-  padding: 0.5rem 1rem;
-  background: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.cancel-booking-button:hover {
-  background: #c82333;
-}
-
+/* Modal */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -325,25 +360,30 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  backdrop-filter: blur(4px);
 }
 
 .modal-content {
   background: white;
-  padding: 2rem;
-  border-radius: 8px;
+  border-radius: 24px;
+  padding: 2.5rem;
   max-width: 400px;
   width: 90%;
   text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
 .modal-content h3 {
-  margin: 0 0 1rem 0;
-  color: #333;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1D1616;
+  margin-bottom: 1rem;
 }
 
 .modal-content p {
-  margin-bottom: 1.5rem;
   color: #666;
+  margin-bottom: 2rem;
+  line-height: 1.5;
 }
 
 .modal-actions {
@@ -352,30 +392,98 @@
   justify-content: center;
 }
 
-.modal-button {
-  padding: 0.5rem 1.5rem;
+.modal-btn {
+  padding: 0.8rem 1.5rem;
   border: none;
-  border-radius: 5px;
+  border-radius: 50px;
+  font-weight: 500;
   cursor: pointer;
-  font-weight: 600;
-  transition: background 0.3s;
+  transition: all 0.3s ease;
+  min-width: 100px;
 }
 
-.modal-button.confirm {
+.modal-btn.confirm {
   background: #dc3545;
   color: white;
 }
 
-.modal-button.confirm:hover {
+.modal-btn.confirm:hover {
   background: #c82333;
+  transform: translateY(-1px);
 }
 
-.modal-button.cancel {
-  background: #6c757d;
-  color: white;
+.modal-btn.cancel {
+  background: #f8f9fa;
+  color: #6c757d;
+  border: 2px solid #e9ecef;
 }
 
-.modal-button.cancel:hover {
-  background: #5a6268;
+.modal-btn.cancel:hover {
+  background: #e9ecef;
 }
+
+/* Loading States */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .profile-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
   
+  .profile-card {
+    position: static;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .action-buttons {
+    justify-content: stretch;
+  }
+  
+  .save-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-page-wrapper {
+    padding: 1rem 0.5rem;
+  }
+  
+  .profile-form-card,
+  .bookings-card {
+    padding: 1.5rem;
+    border-radius: 16px;
+  }
+  
+  .profile-card {
+    padding: 1.5rem;
+    border-radius: 16px;
+  }
+  
+  .booking-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  
+  .cancel-booking-btn {
+    align-self: flex-start;
+  }
+  
+  .modal-content {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+}

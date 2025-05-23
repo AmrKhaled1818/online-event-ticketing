@@ -1,0 +1,251 @@
+.footer-wrapper {
+  background-color: #1D1616;
+  color: #EEEEEE;
+  padding: 4rem 2rem 3rem;
+  font-family: var(--font-main);
+}
+
+.footer-contact {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.footer-contact h3 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 3rem;
+  color: #eeeeee;
+  text-align: center;
+  letter-spacing: -0.02em;
+}
+
+.contact-form {
+  background: #EEEEEE;
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr 1fr;
+  max-width: 800px;
+  margin: 0 auto 3rem;
+}
+
+.contact-form .form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.contact-form .form-section.full-width {
+  grid-column: 1 / -1;
+}
+
+.contact-form label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #1D1616;
+  margin-bottom: 0.5rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 95%;
+  padding: 1rem;
+  border: 2px solid #f0f0f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  background: white;
+  color: #1D1616;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: #8E1616;
+  box-shadow: 0 0 0 3px rgba(142, 22, 22, 0.1);
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: #999;
+}
+
+.interest-section {
+  grid-column: 1 / -1;
+  margin-top: 1rem;
+}
+
+.interest-section label {
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.interest-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.interest-tag {
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  color: #495057;
+  padding: 0.6rem 1.2rem;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+.interest-tag:hover {
+  border-color: #8E1616;
+  background: rgba(142, 22, 22, 0.05);
+}
+
+.interest-tag.selected {
+  background: #8E1616;
+  border-color: #8E1616;
+  color: white;
+}
+
+.budget-section {
+  grid-column: 1 / -1;
+}
+
+.budget-options {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.budget-option {
+  flex: 1;
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  color: #495057;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  user-select: none;
+}
+
+.budget-option:hover {
+  border-color: #8E1616;
+  background: rgba(142, 22, 22, 0.05);
+}
+
+.budget-option.selected {
+  background: #8E1616;
+  border-color: #8E1616;
+  color: white;
+}
+
+.contact-form textarea {
+  min-height: 120px;
+  resize: none;
+}
+
+.contact-form button {
+  background: #1D1616;
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  justify-self: start;
+  grid-column: 1 / -1;
+  margin-top: 1rem;
+  min-width: 200px;
+}
+
+.contact-form button:hover {
+  background: #8E1616;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(29, 22, 22, 0.15);
+}
+
+.footer-bottom {
+  border-top: 2px solid #EEEEEE;
+  padding-top: 2rem;
+  text-align: center;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.footer-bottom p {
+  color: #D84040;
+  margin-bottom: 1rem;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.footer-links a {
+  color: #EEEEEE;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #8E1616;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .contact-form {
+    grid-template-columns: 1fr;
+    padding: 2rem;
+    border-radius: 16px;
+  }
+  
+  .footer-contact h3 {
+    font-size: 2rem;
+  }
+  
+  .budget-options {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .interest-tags {
+    justify-content: center;
+  }
+  
+  .footer-links {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-wrapper {
+    padding: 3rem 1rem 2rem;
+  }
+  
+  .contact-form {
+    padding: 1.5rem;
+  }
+  
+  .footer-contact h3 {
+    font-size: 1.75rem;
+  }
+}

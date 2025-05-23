@@ -27,28 +27,28 @@ const ProfilePage = () => {
     confirmPassword: ''
   });
 
-  useEffect(() => {
-    fetchUserProfile();
-    if (user?.role === 'user') {
-      fetchUserBookings();
-    }
-  }, [user?.role]);
-
-  const fetchUserProfile = async () => {
+  const loadProfile = async () => {
     try {
       setLoading(true);
-      setError('');
       const response = await api.get('/users/profile');
       if (response.data.success) {
-        setUser(response.data.data);
+        const fetchedUser = response.data.data;
+        setUser(fetchedUser);
         setFormData({
-          name: response.data.data.name,
-          email: response.data.data.email,
-          profilePicture: response.data.data.profilePicture || '',
+          name: fetchedUser.name,
+          email: fetchedUser.email,
+          profilePicture: fetchedUser.profilePicture || '',
           currentPassword: '',
           newPassword: '',
           confirmPassword: ''
         });
+
+        if (fetchedUser.role === 'user') {
+          const bookingRes = await api.get('/users/bookings');
+          if (bookingRes.data.success) {
+            setBookings(bookingRes.data.data);
+          }
+        }
       } else {
         setError('Failed to load profile');
       }
@@ -62,16 +62,9 @@ const ProfilePage = () => {
     }
   };
 
-  const fetchUserBookings = async () => {
-    try {
-      const response = await api.get('/users/bookings');
-      if (response.data.success) {
-        setBookings(response.data.data);
-      }
-    } catch (err) {
-      setError('Failed to load bookings');
-    }
-  };
+  useEffect(() => {
+    loadProfile();
+  }, [navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -93,7 +86,6 @@ const ProfilePage = () => {
     setError('');
     setSuccess('');
 
-    // Validate passwords if changing password
     if (formData.newPassword) {
       if (!formData.currentPassword) {
         setError('Current password is required');
@@ -124,7 +116,7 @@ const ProfilePage = () => {
       const response = await api.put('/users/profile', updateData);
       if (response.data.success) {
         setSuccess('Profile updated successfully');
-        await fetchUserProfile();
+        await loadProfile();
         setIsEditing(false);
         setFormData(prev => ({
           ...prev,
@@ -149,7 +141,7 @@ const ProfilePage = () => {
     try {
       await api.delete(`/bookings/${selectedBooking._id}`);
       setSuccess('Booking cancelled successfully');
-      fetchUserBookings();
+      await loadProfile();
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to cancel booking');
     }
@@ -157,204 +149,248 @@ const ProfilePage = () => {
     setSelectedBooking(null);
   };
 
-  if (loading) return <div className="loading">Loading profile...</div>;
-  if (!user) return <div className="error">Profile not found</div>;
+  if (loading) {
+    return (
+      <div className="profile-page-wrapper">
+        <div className="loading">Loading your profile...</div>
+      </div>
+    );
+  }
+
+  if (!user && error) {
+    return (
+      <div className="profile-page-wrapper">
+        <div className="error">{error}</div>
+      </div>
+    );
+  }
 
   return (
-    <div className="profile-container">
-      <div className="profile-header">
-        <h1>My Profile</h1>
-        <button 
-          className={`edit-button ${isEditing ? 'cancel' : ''}`}
-          onClick={() => {
-            setIsEditing(!isEditing);
-            setError('');
-            setSuccess('');
-          }}
-        >
-          {isEditing ? 'Cancel' : 'Edit Profile'}
-        </button>
-      </div>
-
-      <div className="profile-content">
-        <div className="profile-picture-section">
-          <img 
-            src={user.profilePicture || '/default-avatar.png'} 
-            alt="Profile" 
+    <div className="profile-page-wrapper">
+      <div className="profile-container">
+        {/* Profile Card */}
+        <div className="profile-card">
+          <div className="profile-picture-container">
+            <img 
+            src={`https://ui-avatars.com/api/?name=${user.name}&background=8E1616&color=fff&size=128`} 
+            alt="User Icon"
             className="profile-picture"
-          />
-          {isEditing && (
-            <input
-              type="text"
-              name="profilePicture"
-              value={formData.profilePicture}
-              onChange={handleInputChange}
-              placeholder="Profile picture URL"
-              className="profile-picture-input"
             />
-          )}
-        </div>
 
-        <form onSubmit={handleSubmit} className="profile-form">
-          <div className="form-group">
-            <label>Name</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              disabled={!isEditing}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              disabled={!isEditing}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Role</label>
-            <input
-              type="text"
-              value={user.role}
-              disabled
-              className="role-input"
-            />
-          </div>
-
-          {isEditing && (
-            <div className="password-section">
-              <h3>Change Password</h3>
-              <div className="form-group">
-                <label>Current Password</label>
-                <div className="password-input-group">
-                  <input
-                    type={showPasswords.current ? "text" : "password"}
-                    name="currentPassword"
-                    value={formData.currentPassword}
-                    onChange={handleInputChange}
-                    placeholder="Enter current password"
-                  />
-                  <button
-                    type="button"
-                    className="toggle-password"
-                    onClick={() => togglePasswordVisibility('current')}
-                  >
-                    {showPasswords.current ? "Hide" : "Show"}
-                  </button>
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label>New Password</label>
-                <div className="password-input-group">
-                  <input
-                    type={showPasswords.new ? "text" : "password"}
-                    name="newPassword"
-                    value={formData.newPassword}
-                    onChange={handleInputChange}
-                    placeholder="Enter new password"
-                  />
-                  <button
-                    type="button"
-                    className="toggle-password"
-                    onClick={() => togglePasswordVisibility('new')}
-                  >
-                    {showPasswords.new ? "Hide" : "Show"}
-                  </button>
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label>Confirm New Password</label>
-                <div className="password-input-group">
-                  <input
-                    type={showPasswords.confirm ? "text" : "password"}
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    placeholder="Confirm new password"
-                  />
-                  <button
-                    type="button"
-                    className="toggle-password"
-                    onClick={() => togglePasswordVisibility('confirm')}
-                  >
-                    {showPasswords.confirm ? "Hide" : "Show"}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {error && <div className="error-message">{error}</div>}
-          {success && <div className="success-message">{success}</div>}
-
-          {isEditing && (
-            <button type="submit" className="save-button">
-              Save Changes
-            </button>
-          )}
-        </form>
-
-        {user?.role === 'user' && (
-          <div className="bookings-section">
-            <h2>My Bookings</h2>
-            {bookings.length === 0 ? (
-              <p className="no-bookings">You haven't booked any events yet.</p>
-            ) : (
-              <div className="bookings-list">
-                {bookings.map(booking => (
-                  <div key={booking._id} className="booking-card">
-                    <div className="booking-info">
-                      <h3>{booking.event.title}</h3>
-                      <p>Date: {new Date(booking.event.date).toLocaleDateString()}</p>
-                      <p>Location: {booking.event.location}</p>
-                      <p>Tickets: {booking.ticketsBooked}</p>
-                      <p>Total: ${booking.totalPrice}</p>
-                    </div>
-                    <button 
-                      className="cancel-booking-button"
-                      onClick={() => handleCancelBooking(booking)}
-                    >
-                      Cancel Booking
-                    </button>
-                  </div>
-                ))}
-              </div>
+            {isEditing && (
+              <button className="profile-picture-edit">
+                ✏️
+              </button>
             )}
           </div>
-        )}
+          
+          <h2 className="profile-name">{user.name}</h2>
+          <p className="profile-email">{user.email}</p>
+          <span className="profile-role">{user.role}</span>
+          
+          <button 
+            className={`edit-profile-btn ${isEditing ? 'cancel' : ''}`}
+            onClick={() => {
+              setIsEditing(!isEditing);
+              setError('');
+              setSuccess('');
+            }}
+          >
+            {isEditing ? 'Cancel Editing' : 'Edit Profile'}
+          </button>
+        </div>
+
+        {/* Main Content */}
+        <div className="profile-main-content">
+          {/* Profile Form */}
+          <div className="profile-form-card">
+            <h3 className="card-title">Profile Information</h3>
+            
+            <form onSubmit={handleSubmit}>
+              <div className="form-grid">
+                <div className="form-group">
+                  <label className="form-label">Full Name</label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    className="form-input"
+                    placeholder="Enter your full name"
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Email Address</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    disabled={!isEditing}
+                    className="form-input"
+                    placeholder="Enter your email"
+                    required
+                  />
+                </div>
+
+                {isEditing && (
+                  <div className="form-group full-width">
+                    <label className="form-label">Profile Picture URL</label>
+                    <input
+                      type="url"
+                      name="profilePicture"
+                      value={formData.profilePicture}
+                      onChange={handleInputChange}
+                      className="form-input"
+                      placeholder="https://example.com/your-photo.jpg"
+                    />
+                  </div>
+                )}
+              </div>
+
+              {isEditing && (
+                <div className="password-section">
+                  <h3>Change Password</h3>
+                  
+                  <div className="form-grid">
+                    <div className="form-group">
+                      <label className="form-label">Current Password</label>
+                      <div className="password-input-group">
+                        <input
+                          type={showPasswords.current ? "text" : "password"}
+                          name="currentPassword"
+                          value={formData.currentPassword}
+                          onChange={handleInputChange}
+                          className="form-input"
+                          placeholder="Enter current password"
+                        />
+                        <button
+                          type="button"
+                          className="toggle-password"
+                          onClick={() => togglePasswordVisibility('current')}
+                        >
+                          {showPasswords.current ? "Hide" : "Show"}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="form-group">
+                      <label className="form-label">New Password</label>
+                      <div className="password-input-group">
+                        <input
+                          type={showPasswords.new ? "text" : "password"}
+                          name="newPassword"
+                          value={formData.newPassword}
+                          onChange={handleInputChange}
+                          className="form-input"
+                          placeholder="Enter new password"
+                        />
+                        <button
+                          type="button"
+                          className="toggle-password"
+                          onClick={() => togglePasswordVisibility('new')}
+                        >
+                          {showPasswords.new ? "Hide" : "Show"}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="form-group full-width">
+                      <label className="form-label">Confirm New Password</label>
+                      <div className="password-input-group">
+                        <input
+                          type={showPasswords.confirm ? "text" : "password"}
+                          name="confirmPassword"
+                          value={formData.confirmPassword}
+                          onChange={handleInputChange}
+                          className="form-input"
+                          placeholder="Confirm new password"
+                        />
+                        <button
+                          type="button"
+                          className="toggle-password"
+                          onClick={() => togglePasswordVisibility('confirm')}
+                        >
+                          {showPasswords.confirm ? "Hide" : "Show"}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {error && <div className="error-message">{error}</div>}
+              {success && <div className="success-message">{success}</div>}
+
+              {isEditing && (
+                <div className="action-buttons">
+                  <button type="submit" className="save-btn">
+                    Save Changes
+                  </button>
+                </div>
+              )}
+            </form>
+          </div>
+
+          {/* Bookings Section */}
+          {user?.role === 'user' && (
+            <div className="bookings-card">
+              <h3 className="card-title">My Bookings</h3>
+              
+              {bookings.length === 0 ? (
+                <div className="no-bookings">
+                  You haven't booked any events yet. Start exploring!
+                </div>
+              ) : (
+                <div className="bookings-grid">
+                  {bookings.map(booking => (
+                    <div key={booking._id} className="booking-item">
+                      <div className="booking-info">
+                        <h3>{booking.event.title}</h3>
+                        <p><strong>Date:</strong> {new Date(booking.event.date).toLocaleDateString()}</p>
+                        <p><strong>Location:</strong> {booking.event.location}</p>
+                        <p><strong>Tickets:</strong> {booking.ticketsBooked}</p>
+                        <p className="booking-price">Total: ${booking.totalPrice}</p>
+                      </div>
+                      <button 
+                        className="cancel-booking-btn"
+                        onClick={() => handleCancelBooking(booking)}
+                      >
+                        Cancel Booking
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
+      {/* Confirmation Modal */}
       {showConfirmModal && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h3>Cancel Booking</h3>
-            <p>Are you sure you want to cancel this booking?</p>
+            <p>Are you sure you want to cancel your booking for "{selectedBooking?.event.title}"? This action cannot be undone.</p>
             <div className="modal-actions">
               <button 
-                className="modal-button confirm"
+                className="modal-btn confirm"
                 onClick={confirmCancelBooking}
               >
-                Yes, Cancel
+                Yes, Cancel Booking
               </button>
               <button 
-                className="modal-button cancel"
+                className="modal-btn cancel"
                 onClick={() => {
                   setShowConfirmModal(false);
                   setSelectedBooking(null);
                 }}
               >
-                No, Keep
+                Keep Booking
               </button>
             </div>
           </div>

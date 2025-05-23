@@ -1,126 +1,150 @@
+:root {
+  --primary-dark: #1D1616;
+  --accent-maroon: #8E1616;
+  --highlight-red: #D84040;
+  --light-gray: #EEEEEE;
+  --font-main: 'Segoe UI', sans-serif;
+}
+
 .my-events-page {
-    padding: 3rem 2rem;
-    text-align: center;
-    background-color: #f9f9f9;
-    min-height: 100vh;
-    font-family: 'Segoe UI', sans-serif;
-  }
-  
-  h2 {
-    font-size: 2.2rem;
-    margin-bottom: 2.5rem;
-    color: #1e293b;
-  }
-  
+  padding: 3rem 2rem;
+  text-align: center;
+  background-color: var(--light-gray);
+  min-height: 100vh;
+  font-family: var(--font-main);
+}
+
+.my-events-page h2 {
+  font-size: 2.2rem;
+  margin-bottom: 2.5rem;
+  color: var(--primary-dark);
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.new-event-btn {
+  padding: 0.8rem 1.6rem;
+  background: var(--highlight-red);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.new-event-btn:hover {
+  background: #bb2c2c;
+}
+
+.analytics-btn {
+  padding: 0.8rem 1.6rem;
+  background: var(--accent-maroon);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.analytics-btn:hover {
+  background: #6c1111;
+}
+
+.event-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+  gap: 2.5rem 2rem;
+  padding: 0 1rem;
+}
+
+.event-item {
+  background: white;
+  border-radius: 16px;
+  padding: 1.6rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  transition: transform 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 260px;
+  color: var(--primary-dark);
+}
+
+.event-item:hover {
+  transform: translateY(-5px);
+}
+
+.event-actions {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding-top: 1.2rem;
+}
+
+.event-actions button {
+  flex: 1;
+  padding: 0.6rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background 0.3s ease;
+}
+
+.event-actions button:hover {
+  opacity: 0.9;
+}
+
+.event-actions button:not(.delete-btn) {
+  background-color: var(--highlight-red);
+  color: white;
+}
+
+.delete-btn {
+  background-color: #ef4444;
+  color: white;
+}
+.icon-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dark-icon svg {
+  fill: #ffffff;
+}
+
+.analytics-btn svg,
+.new-event-btn svg,
+.delete-btn svg {
+  fill: white;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
   .action-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-bottom: 2.5rem;
-  }
-  
-  .new-event-btn {
-    padding: 0.8rem 1.6rem;
-    background: linear-gradient(to right, #3b82f6, #2563eb);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  
-  .new-event-btn:hover {
-    background: linear-gradient(to right, #2563eb, #1d4ed8);
-  }
-  
-  .analytics-btn {
-    padding: 0.8rem 1.6rem;
-    background: linear-gradient(to right, #8b5cf6, #7c3aed);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  
-  .analytics-btn:hover {
-    background: linear-gradient(to right, #7c3aed, #6d28d9);
-  }
-  
-  .event-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
-    gap: 2.5rem 2rem; /* More space between rows and columns */
-    padding: 0 1rem;
-  }
-  
-  .event-item {
-    background: white;
-    border-radius: 16px;
-    padding: 1.6rem;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
-    transition: transform 0.25s ease;
-    display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    min-height: 260px;
+    align-items: center;
   }
-  
-  .event-item:hover {
-    transform: translateY(-5px);
+
+  .new-event-btn,
+  .analytics-btn {
+    width: 100%;
+    max-width: 300px;
   }
-  
-  .event-actions {
-    margin-top: auto;
-    display: flex;
-    justify-content: space-between;
-    gap: 0.8rem;
-    padding-top: 1.2rem;
+
+  .event-grid {
+    grid-template-columns: 1fr;
   }
-  
-  .event-actions button {
-    flex: 1;
-    padding: 0.6rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.95rem;
-    transition: background 0.3s ease;
-  }
-  
-  .event-actions button:hover {
-    opacity: 0.9;
-  }
-  
-  .event-actions button:not(.delete-btn) {
-    background-color: #facc15;
-    color: #1e293b;
-  }
-  
-  .delete-btn {
-    background-color: #ef4444;
-    color: white;
-  }
-  
-  /* Responsive styles */
-  @media (max-width: 768px) {
-    .action-buttons {
-      flex-direction: column;
-      align-items: center;
-    }
-    
-    .new-event-btn,
-    .analytics-btn {
-      width: 100%;
-      max-width: 300px;
-    }
-    
-    .event-grid {
-      grid-template-columns: 1fr;
-    }
-  }  
+}

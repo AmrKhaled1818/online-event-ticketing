@@ -24,6 +24,8 @@ import EventAnalytics from './components/events/EventAnalytics';
 import AdminEventsPage from './components/admin/AdminEventsPage';
 import AdminUsersPage from './components/admin/AdminUsersPage';
 import Navbar from './components/navbar/Navbar';
+import Footer from './components/footer/Footer';
+import HomePage from './components/home/Home';
 
 // Simple auth check (can be replaced later with proper context)
 const isAuthenticated = document.cookie.includes('token=') || localStorage.getItem('token');
@@ -36,31 +38,17 @@ function AppRoutes() {
   return (
     <>
       {shouldShowNavbar && <Navbar />}
-      <Routes>
-        {/* Redirect root based on auth */}
-        <Route path="/" element={isAuthenticated ? <Navigate to="/events" /> : <Navigate to="/login" />} />
 
-        {/* Public routes with protection from logged-in access */}
-        <Route
-          path="/login"
-          element={isAuthenticated ? <Navigate to="/events" /> : <LoginPage />}
-        />
-        <Route
-          path="/register"
-          element={isAuthenticated ? <Navigate to="/events" /> : <RegisterPage />}
-        />
-        <Route
-          path="/forgot-password"
-          element={isAuthenticated ? <Navigate to="/events" /> : <ForgotPasswordPage />}
-        />
-        <Route
-          path="/verify-otp"
-          element={isAuthenticated ? <Navigate to="/events" /> : <VerifyOtpPage />}
-        />
-        <Route
-          path="/reset-password"
-          element={isAuthenticated ? <Navigate to="/events" /> : <ResetPasswordPage />}
-        />
+      <Routes>
+        {/* Redirect root to homepage */}
+        <Route path="/" element={<HomePage />} />
+
+        {/* Public routes */}
+        <Route path="/login" element={isAuthenticated ? <Navigate to="/events" /> : <LoginPage />} />
+        <Route path="/register" element={isAuthenticated ? <Navigate to="/events" /> : <RegisterPage />} />
+        <Route path="/forgot-password" element={isAuthenticated ? <Navigate to="/events" /> : <ForgotPasswordPage />} />
+        <Route path="/verify-otp" element={isAuthenticated ? <Navigate to="/events" /> : <VerifyOtpPage />} />
+        <Route path="/reset-password" element={isAuthenticated ? <Navigate to="/events" /> : <ResetPasswordPage />} />
 
         {/* Protected Routes */}
         <Route path="/logout" element={<LogoutPage />} />
@@ -80,6 +68,8 @@ function AppRoutes() {
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
+
+      {shouldShowNavbar && <Footer />} {/* Show footer on main app pages */}
     </>
   );
 }
