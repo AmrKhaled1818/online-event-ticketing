@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './UpdateProfileForm.css';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const UpdateProfileForm = ({ user, onUpdate }) => {
     const [formData, setFormData] = useState({
@@ -16,15 +18,42 @@ const UpdateProfileForm = ({ user, onUpdate }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        console.log('Form submitted'); // Debug log
         try {
             const res = await axios.put('/api/users/profile', formData, { withCredentials: true });
+            console.log('Update successful:', res.data); // Debug log
             setMessage('Profile updated successfully!');
             setError('');
+            
+            // Call toast directly
+            toast('Profile updated successfully!', {
+                type: 'success',
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+            
             setTimeout(() => {
                 onUpdate();
             }, 1000);
         } catch (err) {
-            setError(err.response?.data?.message || 'Update failed');
+            console.log('Update failed:', err); // Debug log
+            const errorMessage = err.response?.data?.message || 'Update failed';
+            setError(errorMessage);
+            
+            // Call toast directly
+            toast(errorMessage, {
+                type: 'error',
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         }
     };
 
