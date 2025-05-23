@@ -1,7 +1,14 @@
+:root {
+  --primary-dark: #1D1616;
+  --accent-maroon: #8E1616;
+  --highlight-red: #D84040;
+  --light-gray: #EEEEEE;
+}
+
 .event-details-wrapper {
     max-width: 600px;
     margin: 3rem auto;
-    background: #fff;
+    background: var(--light-gray);
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 0 16px rgba(0, 0, 0, 0.1);
@@ -21,7 +28,7 @@
 
 .booking-section button {
     padding: 0.5rem 1rem;
-    background: #1976d2;
+    background: var(--highlight-red);
     color: white;
     border: none;
     border-radius: 6px;
@@ -53,12 +60,13 @@
 
 .event-details-header {
   padding: 2rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid #ccc;
+  background: var(--primary-dark);
+  color: white;
 }
 
 .event-details-header h1 {
   margin: 0 0 1rem 0;
-  color: #2c3e50;
   font-size: 2rem;
 }
 
@@ -69,15 +77,15 @@
 }
 
 .event-category {
-  background: #e2e8f0;
-  color: #4a5568;
+  background: var(--light-gray);
+  color: var(--primary-dark);
   padding: 0.5rem 1rem;
   border-radius: 4px;
   font-weight: 500;
 }
 
 .event-status {
-  background: #48bb78;
+  background: var(--highlight-red);
   color: white;
   padding: 0.5rem 1rem;
   border-radius: 4px;
@@ -102,14 +110,15 @@
 }
 
 .details-section {
-  background: #f8fafc;
+  background: #fff;
   padding: 1.5rem;
   border-radius: 8px;
+  border: 1px solid #ccc;
 }
 
 .details-section h2 {
   margin: 0 0 1.5rem 0;
-  color: #2c3e50;
+  color: var(--accent-maroon);
   font-size: 1.5rem;
 }
 
@@ -126,25 +135,25 @@
 }
 
 .detail-item i {
-  color: #3498db;
+  color: var(--highlight-red);
   font-size: 1.25rem;
   margin-top: 0.25rem;
 }
 
 .detail-item h3 {
   margin: 0 0 0.5rem 0;
-  color: #4a5568;
+  color: var(--primary-dark);
   font-size: 0.875rem;
 }
 
 .detail-item p {
   margin: 0;
-  color: #2c3e50;
+  color: #333;
   font-weight: 500;
 }
 
 .event-description {
-  color: #4a5568;
+  color: #555;
   line-height: 1.6;
   margin: 0;
 }
@@ -155,7 +164,7 @@
 }
 
 .ticket-card {
-  background: #f8fafc;
+  background: var(--light-gray);
   padding: 1.5rem;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -163,7 +172,7 @@
 
 .ticket-card h3 {
   margin: 0 0 1.5rem 0;
-  color: #2c3e50;
+  color: var(--primary-dark);
   font-size: 1.25rem;
 }
 
@@ -173,7 +182,7 @@
   align-items: center;
   margin-bottom: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid #ccc;
 }
 
 .price-label, .availability-label {
@@ -182,20 +191,20 @@
 }
 
 .price-value {
-  color: #2c3e50;
+  color: var(--accent-maroon);
   font-size: 1.5rem;
   font-weight: 600;
 }
 
 .availability-value {
-  color: #2c3e50;
+  color: var(--primary-dark);
   font-weight: 500;
 }
 
 .buy-ticket-button {
   width: 100%;
   padding: 1rem;
-  background-color: #3498db;
+  background-color: var(--highlight-red);
   color: white;
   border: none;
   border-radius: 4px;
@@ -205,11 +214,11 @@
 }
 
 .buy-ticket-button:hover:not(:disabled) {
-  background-color: #2980b9;
+  background-color: #a83232;
 }
 
 .buy-ticket-button:disabled {
-  background-color: #95a5a6;
+  background-color: #aaa;
   cursor: not-allowed;
 }
 
@@ -217,11 +226,11 @@
   text-align: center;
   padding: 2rem;
   font-size: 1.2rem;
-  color: #4a5568;
+  color: var(--accent-maroon);
 }
 
 .error {
-  color: #e53e3e;
+  color: var(--highlight-red);
 }
 
 @media (max-width: 1024px) {
