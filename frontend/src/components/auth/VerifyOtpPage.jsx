@@ -59,7 +59,7 @@ const VerifyOtpPage = () => {
                 throw new Error('Email not found. Please try the forgot password process again.');
             }
 
-            const response = await api.put('/verifyOtp', { email, otp: otpString });
+            const response = await api.post('/verifyOtp', { email, otp: otpString });
             toast.success('OTP verified successfully!');
             
             // Store reset token for the next step
