@@ -84,13 +84,21 @@ const logoutUser = async (req, res) => {
 const getUserProfile = async (req, res) => {
   try {
     res.json({
+      success: true,
+      data: {
       _id: req.user._id,
       name: req.user.name,
       email: req.user.email,
       role: req.user.role,
+        profilePicture: req.user.profilePicture || ''
+      }
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    res.status(500).json({ 
+      success: false,
+      message: "Server error", 
+      error: error.message 
+    });
   }
 };
 
@@ -98,24 +106,49 @@ const getUserProfile = async (req, res) => {
 const updateUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) {
+      return res.status(404).json({ 
+        success: false,
+        message: "User not found" 
+      });
+    }
 
+    // Update basic info
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
-    if (req.body.password) {
-      user.password = req.body.password;
+    user.profilePicture = req.body.profilePicture || user.profilePicture;
+
+    // Update password if provided
+    if (req.body.newPassword) {
+      // Verify current password
+      const isMatch = await user.matchPassword(req.body.currentPassword);
+      if (!isMatch) {
+        return res.status(401).json({ 
+          success: false,
+          message: "Current password is incorrect" 
+        });
+      }
+      user.password = req.body.newPassword;
     }
 
     const updatedUser = await user.save();
 
     res.json({
+      success: true,
+      data: {
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
       role: updatedUser.role,
+        profilePicture: updatedUser.profilePicture || ''
+      }
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    res.status(500).json({ 
+      success: false,
+      message: "Server error", 
+      error: error.message 
+    });
   }
 };
 

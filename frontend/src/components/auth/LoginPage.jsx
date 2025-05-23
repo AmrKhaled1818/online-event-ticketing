@@ -1,22 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './LoginPage.css';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import api from '../../api/api';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        // Check for registration success message
+        if (location.state?.message) {
+            setSuccess(location.state.message);
+        }
+    }, [location]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        setError('');
+        
         try {
-            const response = await axios.post('/api/v1/login', { email, password }, { withCredentials: true });
-            console.log('Login success:', response.data);
-            navigate('/events'); // Redirect to events page after login
+            console.log('Attempting login with:', { email });
+            const response = await api.post('/login', { email, password });
+            
+            console.log('Login response:', response.data);
+            
+            if (response.data) {
+                // Store user data in localStorage
+                localStorage.setItem('user', JSON.stringify(response.data));
+                
+                // Redirect based on user role
+                if (response.data.role === 'admin') {
+                    navigate('/admin/events');
+                } else if (response.data.role === 'organizer') {
+                    navigate('/my-events');
+                } else {
+                    navigate('/events');
+                }
+            } else {
+                setError('Invalid response from server');
+            }
         } catch (err) {
-            setError(err.response?.data?.message || 'Login failed');
+            console.error('Login error:', err);
+            console.error('Error response:', err.response?.data);
+            setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
         }
     };
 
@@ -31,6 +61,7 @@ const LoginPage = () => {
                 <form className="login-form" onSubmit={handleLogin}>
                     <h2>Login</h2>
                     {error && <p className="error-message">{error}</p>}
+                    {success && <p className="success-message">{success}</p>}
                     <input
                         type="email"
                         placeholder="Email"

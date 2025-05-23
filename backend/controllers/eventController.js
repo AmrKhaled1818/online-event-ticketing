@@ -84,14 +84,30 @@ export const getAllEvents = async (req, res) => {
     }
 };
 
-// GET /api/v1/events 
+// GET /api/v1/events/:id
 export const getEventById = async (req, res) => {
     try {
-        const event = await Event.findById(req.params.id).populate('organizer', 'name email');
-        if (!event) return res.status(404).json({ message: 'Event not found' });
-        res.status(200).json(event);
+        const event = await Event.findById(req.params.id)
+            .populate('organizer', 'name email');
+            
+        if (!event) {
+            return res.status(404).json({ 
+                success: false,
+                message: 'Event not found' 
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: event
+        });
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching event', error: error.message });
+        console.error('Error fetching event:', error);
+        res.status(500).json({ 
+            success: false,
+            message: 'Error fetching event', 
+            error: error.message 
+        });
     }
 };
 
@@ -168,10 +184,121 @@ export const updateEventStatus = async (req, res) => {
 
 export const getApprovedEvents = async (req, res) => {
     try {
-        const events = await Event.find({ status: 'approved' })
-            .populate('organizer', 'name email');
-        res.status(200).json(events);
+        const { category, date, priceRange, location } = req.query;
+        let query = { status: 'approved' };
+
+        // Add category filter
+        if (category) {
+            query.category = category;
+        }
+
+        // Add location filter
+        if (location) {
+            query.location = { $regex: location, $options: 'i' };
+        }
+
+        // Add date filter
+        if (date) {
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const nextWeek = new Date(now);
+            nextWeek.setDate(nextWeek.getDate() + 7);
+            const nextMonth = new Date(now);
+            nextMonth.setMonth(nextMonth.getMonth() + 1);
+
+            switch (date) {
+                case 'today':
+                    query.date = {
+                        $gte: new Date(now.setHours(0, 0, 0, 0)),
+                        $lt: new Date(now.setHours(23, 59, 59, 999))
+                    };
+                    break;
+                case 'tomorrow':
+                    query.date = {
+                        $gte: new Date(tomorrow.setHours(0, 0, 0, 0)),
+                        $lt: new Date(tomorrow.setHours(23, 59, 59, 999))
+                    };
+                    break;
+                case 'this-week':
+                    query.date = {
+                        $gte: now,
+                        $lt: nextWeek
+                    };
+                    break;
+                case 'this-month':
+                    query.date = {
+                        $gte: now,
+                        $lt: nextMonth
+                    };
+                    break;
+            }
+        }
+
+        // Add price range filter
+        if (priceRange) {
+            switch (priceRange) {
+                case 'free':
+                    query.ticketPrice = 0;
+                    break;
+                case 'under-50':
+                    query.ticketPrice = { $lt: 50 };
+                    break;
+                case '50-100':
+                    query.ticketPrice = { $gte: 50, $lte: 100 };
+                    break;
+                case 'over-100':
+                    query.ticketPrice = { $gt: 100 };
+                    break;
+            }
+        }
+
+        const events = await Event.find(query)
+            .populate('organizer', 'name email')
+            .sort({ date: 1 });
+
+        res.status(200).json({
+            success: true,
+            count: events.length,
+            data: events
+        });
     } catch (error) {
-        res.status(500).json({ message: 'Error fetching approved events', error: error.message });
+        res.status(500).json({ 
+            success: false,
+            message: 'Error fetching approved events', 
+            error: error.message 
+        });
     }
+};
+
+export const searchEvents = async (req, res) => {
+  try {
+    const { query } = req.query;
+    
+    if (!query) {
+      return res.status(400).json({ 
+        success: false,
+        message: 'Search query is required' 
+      });
+    }
+
+    const events = await Event.find({
+      title: { $regex: query, $options: 'i' },
+      status: 'approved'
+    }).populate('organizer', 'name email')
+      .sort({ date: 1 });
+
+    res.status(200).json({
+      success: true,
+      count: events.length,
+      data: events
+    });
+  } catch (error) {
+    console.error('Search error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error searching events',
+      error: error.message
+    });
+  }
 };  

@@ -12,8 +12,14 @@
     color: #1e293b;
   }
   
-  .new-event-btn {
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
     margin-bottom: 2.5rem;
+  }
+  
+  .new-event-btn {
     padding: 0.8rem 1.6rem;
     background: linear-gradient(to right, #3b82f6, #2563eb);
     color: white;
@@ -27,6 +33,22 @@
   
   .new-event-btn:hover {
     background: linear-gradient(to right, #2563eb, #1d4ed8);
+  }
+  
+  .analytics-btn {
+    padding: 0.8rem 1.6rem;
+    background: linear-gradient(to right, #8b5cf6, #7c3aed);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .analytics-btn:hover {
+    background: linear-gradient(to right, #7c3aed, #6d28d9);
   }
   
   .event-grid {
@@ -83,4 +105,22 @@
   .delete-btn {
     background-color: #ef4444;
     color: white;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .action-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .new-event-btn,
+    .analytics-btn {
+      width: 100%;
+      max-width: 300px;
+    }
+    
+    .event-grid {
+      grid-template-columns: 1fr;
+    }
   }  

@@ -7,6 +7,8 @@ import api from '../../api/api'; // Adjust path if needed
 const EventForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(id ? true : false);
+  const [error, setError] = useState('');
 
   const [formData, setFormData] = useState({
     title: '',
@@ -20,26 +22,40 @@ const EventForm = () => {
 
   useEffect(() => {
     if (id) {
-      axios.get(`/api/v1/events/${id}`, { withCredentials: true }).then((res) => {
-        const {
-          title,
-          description,
-          date,
-          location,
-          category,
-          totalTickets,
-          ticketPrice,
-        } = res.data;
-        setFormData({
-          title,
-          description,
-          date: date.slice(0, 16), // format for datetime-local
-          location,
-          category,
-          totalTickets,
-          ticketPrice,
+      setLoading(true);
+      axios.get(`/api/v1/events/${id}`, { withCredentials: true })
+        .then((res) => {
+          if (res.data && res.data.data) {
+            const eventData = res.data.data; // Adjust based on your API response structure
+            
+            // Format the date for datetime-local input if it exists
+            let formattedDate = '';
+            if (eventData.date) {
+              // Convert to ISO string and extract the datetime-local compatible portion
+              const dateObj = new Date(eventData.date);
+              if (!isNaN(dateObj)) {
+                formattedDate = dateObj.toISOString().slice(0, 16);
+              }
+            }
+            
+            setFormData({
+              title: eventData.title || '',
+              description: eventData.description || '',
+              date: formattedDate,
+              location: eventData.location || '',
+              category: eventData.category || '',
+              totalTickets: eventData.totalTickets || '',
+              ticketPrice: eventData.ticketPrice || '',
+            });
+          }
+        })
+        .catch((err) => {
+          console.error('Error fetching event:', err);
+          setError('Failed to load event data. Please try again.');
+        })
+        .finally(() => {
+          setLoading(false);
         });
-      });
     }
   }, [id]);
 
@@ -67,6 +83,9 @@ const EventForm = () => {
       alert(err.response?.data?.message || 'Failed to save event');
     }
   };
+
+  if (loading) return <div className="event-form-wrapper loading">Loading event data...</div>;
+  if (error) return <div className="event-form-wrapper error">{error}</div>;
 
   return (
     <div className="event-form-wrapper">

@@ -8,7 +8,8 @@ import {
   getEventAnalytics,
   updateEventStatus,
   getApprovedEvents,
-  getUserEvents
+  getUserEvents,
+  searchEvents
 } from "../controllers/eventController.js";
 import { protect, restrictTo } from "../middleware/authMiddleware.js";
 
@@ -19,6 +20,7 @@ router.get("/my", protect, restrictTo("organizer", "admin"), getUserEvents); // 
 // PUBLIC ROUTES
 router.get("/", getApprovedEvents); // GET approved events (main page)
 router.get("/all", getAllEvents); // GET all events (admin, not usually public)
+router.get("/search", searchEvents); // GET events by search query
 router.get("/:id", getEventById); // GET specific event by ID (public)
 
 // ORGANIZER ROUTES

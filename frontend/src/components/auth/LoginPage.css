@@ -88,6 +88,17 @@
     text-align: center;
 }
 
+.success-message {
+    color: #34d399;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    background-color: rgba(52, 211, 153, 0.1);
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid rgba(52, 211, 153, 0.2);
+}
+
 .link-container {
     margin-top: 1.2rem;
     display: flex;

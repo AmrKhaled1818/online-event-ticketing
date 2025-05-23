@@ -10,6 +10,8 @@ import {
 import LoginPage from './components/auth/LoginPage';
 import RegisterPage from './components/auth/RegisterPage';
 import ForgotPasswordPage from './components/auth/ForgotPasswordPage';
+import VerifyOtpPage from './components/auth/VerifyOtpPage';
+import ResetPasswordPage from './components/auth/ResetPasswordPage';
 import LogoutPage from './components/auth/LogoutPage';
 import ProfilePage from './components/profile/ProfilePage';
 import EventList from './components/events/EventList';
@@ -28,7 +30,7 @@ const isAuthenticated = document.cookie.includes('token=') || localStorage.getIt
 
 function AppRoutes() {
   const location = useLocation();
-  const hideNavbarPaths = ['/login', '/register', '/forgot-password'];
+  const hideNavbarPaths = ['/login', '/register', '/forgot-password', '/verify-otp', '/reset-password'];
   const shouldShowNavbar = !hideNavbarPaths.includes(location.pathname);
 
   return (
@@ -50,6 +52,14 @@ function AppRoutes() {
         <Route
           path="/forgot-password"
           element={isAuthenticated ? <Navigate to="/events" /> : <ForgotPasswordPage />}
+        />
+        <Route
+          path="/verify-otp"
+          element={isAuthenticated ? <Navigate to="/events" /> : <VerifyOtpPage />}
+        />
+        <Route
+          path="/reset-password"
+          element={isAuthenticated ? <Navigate to="/events" /> : <ResetPasswordPage />}
         />
 
         {/* Protected Routes */}

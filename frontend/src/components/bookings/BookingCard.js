@@ -8,7 +8,7 @@ const BookingCard = ({ booking }) => {
 
     const handleCancel = async () => {
         try {
-            await axios.put(`/api/bookings/${booking._id}/cancel`, {}, { withCredentials: true });
+            await axios.delete(`/api/bookings/${booking._id}`, { withCredentials: true });
             alert('Booking cancelled');
             window.location.reload(); // Refresh the page
         } catch (err) {
@@ -18,13 +18,13 @@ const BookingCard = ({ booking }) => {
 
     return (
         <div className="booking-card">
-            <h3>{booking.eventTitle}</h3>
-            <p><strong>Quantity:</strong> {booking.quantity}</p>
+            <h3>{booking.event?.title || booking.eventTitle}</h3>
+            <p><strong>Quantity:</strong> {booking.ticketsBooked}</p>
             <p><strong>Total:</strong> {booking.totalPrice} EGP</p>
             <p><strong>Status:</strong> {booking.status}</p>
             <div className="booking-actions">
                 <button onClick={() => navigate(`/bookings/${booking._id}`)}>View</button>
-                {booking.status === 'Confirmed' && (
+                {booking.status === 'confirmed' && (
                     <button className="cancel-btn" onClick={handleCancel}>Cancel</button>
                 )}
             </div>

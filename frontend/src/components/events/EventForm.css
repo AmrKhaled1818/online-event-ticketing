@@ -68,3 +68,33 @@
     background: linear-gradient(to right, #2563eb, #1e40af);
   }
   
+  /* Loading and error states */
+  .event-form-wrapper.loading,
+  .event-form-wrapper.error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+    text-align: center;
+    font-size: 1.2rem;
+  }
+  
+  .event-form-wrapper.loading {
+    color: #3b82f6;
+  }
+  
+  .event-form-wrapper.error {
+    color: #ef4444;
+  }
+
+  /* Add a pulsing animation for the loading state */
+  @keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+  }
+  
+  .event-form-wrapper.loading {
+    animation: pulse 1.5s infinite ease-in-out;
+  }
+  
