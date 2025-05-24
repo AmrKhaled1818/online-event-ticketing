@@ -127,7 +127,7 @@ const EventAnalytics = () => {
           <BarChart data={analytics}>
             <XAxis dataKey="title" />
             <YAxis />
-            <Tooltip formatter={(value) => `$${value}`} />
+            <Tooltip formatter={(value) => `${value} EGP`} />
             <Bar name="Revenue" dataKey="revenue" fill="#0088FE" />
           </BarChart>
         </ResponsiveContainer>
@@ -178,7 +178,7 @@ const EventAnalytics = () => {
                 </div>
                 <div className="stat">
                   <span className="stat-label">Revenue:</span>
-                  <span>${event.revenue}</span>
+                  <span>{event.revenue} EGP</span>
                 </div>
               </div>
               <div className="booking-progress">
@@ -232,7 +232,7 @@ const EventAnalytics = () => {
         </div>
         <div className="stat-card">
           <span className="stat-value">
-            ${analytics.reduce((sum, event) => sum + event.revenue, 0)}
+            {analytics.reduce((sum, event) => sum + event.revenue, 0)} EGP
           </span>
           <span className="stat-label">Total Revenue</span>
         </div>

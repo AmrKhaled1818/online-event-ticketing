@@ -112,7 +112,7 @@ const EventDetails = () => {
                   <i className="fas fa-ticket-alt"></i>
                   <div>
                     <h3>Price</h3>
-                    <p>${event.ticketPrice}</p>
+                    <p>{event.ticketPrice} EGP</p>
                   </div>
                 </div>
                 <div className="detail-item">
@@ -136,7 +136,7 @@ const EventDetails = () => {
               <h3>Book Tickets</h3>
               <div className="ticket-price">
                 <span className="price-label">Price per ticket</span>
-                <span className="price-value">${event.ticketPrice}</span>
+                <span className="price-value">{event.ticketPrice} EGP</span>
               </div>
               <div className="ticket-availability">
                 <span className="availability-label">Available Tickets</span>

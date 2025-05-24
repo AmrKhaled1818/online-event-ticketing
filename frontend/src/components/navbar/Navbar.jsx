@@ -41,14 +41,20 @@ const Navbar = () => {
 
       <div className="navbar-links">
         <NavLink to="/events">Events</NavLink>
-        {user && (user.role === 'organizer' || user.role === 'admin') && (
-          <NavLink to="/my-events">My Events</NavLink>
+        {user ? (
+          <>
+            {user.role === 'organizer' && (
+              <NavLink to="/my-events">My Events</NavLink>
+            )}
+            {user.role === 'admin' && (
+              <NavLink to="/admin/events">Admin</NavLink>
+            )}
+            <NavLink to="/profile">Profile</NavLink>
+            <button className="logout-btn" onClick={handleLogout}>Logout</button>
+          </>
+        ) : (
+          <NavLink to="/login">Login</NavLink>
         )}
-        {user && user.role === 'admin' && (
-          <NavLink to="/admin/events">Admin</NavLink>
-        )}
-        <NavLink to="/profile">Profile</NavLink>
-        <button className="logout-btn" onClick={handleLogout}>Logout</button>
       </div>
     </nav>
   );

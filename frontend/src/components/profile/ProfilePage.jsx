@@ -459,7 +459,7 @@ const ProfilePage = () => {
                         <p><strong>Date:</strong> {new Date(booking.event.date).toLocaleDateString()}</p>
                         <p><strong>Location:</strong> {booking.event.location}</p>
                         <p><strong>Tickets:</strong> {booking.ticketsBooked}</p>
-                        <p className="booking-price">Total: ${booking.totalPrice}</p>
+                        <p className="booking-price">Total: {booking.totalPrice} EGP</p>
                       </div>
                       <button 
                         className="cancel-booking-btn"
