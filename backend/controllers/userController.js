@@ -7,18 +7,22 @@ import sendEmail from "../utils/sendEmail.js";
 const sendTokenResponse = (user, res) => {
   const token = user.generateToken();
 
+  // Set cookie
   res.cookie('token', token, {
     httpOnly: true,
-    secure: false, // Set to true in production with HTTPS
-    sameSite: 'Lax',
+    secure: true,
+    sameSite: 'None', // Allow cross-origin requests
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    domain: '.railway.app' // Allow sharing across subdomains
   });
 
+  // Send response with token
   res.status(200).json({
     _id: user._id,
     name: user.name,
     email: user.email,
     role: user.role,
+    token: token // Include token in response
   });
 };
 
@@ -80,8 +84,9 @@ const logoutUser = async (req, res) => {
     // Clear the token cookie
     res.clearCookie('token', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict'
+      secure: true,
+      sameSite: 'None',
+      domain: '.railway.app'
     });
 
     res.status(200).json({

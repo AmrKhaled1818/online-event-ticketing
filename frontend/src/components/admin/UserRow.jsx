@@ -1,10 +1,10 @@
 import React from 'react';
-import axios from 'axios';
+import api from '../../api/api';
 
 const UserRow = ({ user, refresh }) => {
     const handleDelete = async () => {
         if (window.confirm('Delete this user?')) {
-            await axios.delete(`/api/admin/users/${user._id}`, { withCredentials: true });
+            await api.delete(`/admin/users/${user._id}`);
             refresh();
         }
     };
@@ -12,7 +12,7 @@ const UserRow = ({ user, refresh }) => {
     const handleRoleUpdate = async () => {
         const newRole = window.prompt('Enter new role (User, Organizer, Admin)', user.role);
         if (newRole && newRole !== user.role) {
-            await axios.put(`/api/admin/users/${user._id}/role`, { role: newRole }, { withCredentials: true });
+            await api.put(`/admin/users/${user._id}/role`, { role: newRole });
             refresh();
         }
     };

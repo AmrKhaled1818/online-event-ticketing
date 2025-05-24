@@ -7,8 +7,6 @@ import eventRoutes from "./routes/eventRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
 import cookieParser from 'cookie-parser';
 
-
-
 dotenv.config();
 
 // Connect to MongoDB
@@ -20,11 +18,17 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
+// CORS configuration
 app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true                
+  origin: 'https://ticketease-iota.vercel.app',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  exposedHeaders: ['Set-Cookie'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+  maxAge: 86400 // 24 hours
 }));
-
 
 // Mount API routes
 app.use("/api/v1", userRoutes);
@@ -44,4 +48,4 @@ app.use((err, req, res, next) => {
 
 // Start the server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));

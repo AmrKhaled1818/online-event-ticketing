@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './BookingDetails.css';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../api/api';
 
 const BookingDetails = () => {
     const { id } = useParams();
@@ -10,7 +10,7 @@ const BookingDetails = () => {
     useEffect(() => {
         const fetchBooking = async () => {
             try {
-                const res = await axios.get(`/api/bookings/${id}`, { withCredentials: true });
+                const res = await api.get(`/bookings/${id}`);
                 setBooking(res.data);
             } catch (err) {
                 console.error('Failed to fetch booking', err);

@@ -14,10 +14,16 @@ const LoginPage = () => {
   const location = useLocation();
 
   useEffect(() => {
+    // Check if user is already logged in
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/');
+    }
+
     if (location.state?.message) {
       toast.success(location.state.message);
     }
-  }, [location]);
+  }, [location, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -25,27 +31,19 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      console.log('Attempting login with:', { email });
       const response = await api.post('/login', { email, password });
-      console.log('Login response:', response.data);
+      const { token, ...userData } = response.data;
 
-      if (response.data) {
-        // ✅ Store token if it exists
-        if (response.data.token) {
-          localStorage.setItem('token', response.data.token);
-        }
-
-        // Optional: Store user info separately (if needed)
-        localStorage.setItem('user', JSON.stringify(response.data));
+      if (token) {
+        // Store token and user data
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(userData));
 
         toast.success('Login successful!');
-        // Add artificial delay
-        setTimeout(() => {
-          navigate('/');
-        }, 1500);
+        navigate('/');
       } else {
-        setError('Invalid response from server');
-        toast.error('Invalid response from server');
+        setError('No token received');
+        toast.error('Login failed. Please try again.');
       }
     } catch (err) {
       console.error('Login error:', err);

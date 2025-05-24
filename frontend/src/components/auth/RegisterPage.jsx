@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import './LoginPage.css';
-import axios from 'axios';
+import api from '../../api/api';
 import Loader from '../common/Loader';
 
 const RegisterPage = () => {
@@ -31,7 +31,7 @@ const RegisterPage = () => {
 
         setLoading(true);
         try {
-            const response = await axios.post('/api/v1/register', formData);
+            const response = await api.post('/register', formData);
             console.log('Register success:', response.data);
             toast.success('Registration successful! Please log in.');
             setError('');

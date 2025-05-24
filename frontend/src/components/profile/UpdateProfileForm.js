@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './UpdateProfileForm.css';
-import axios from 'axios';
+import api from '../../api/api';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -20,7 +20,7 @@ const UpdateProfileForm = ({ user, onUpdate }) => {
         e.preventDefault();
         console.log('Form submitted'); // Debug log
         try {
-            const res = await axios.put('/api/users/profile', formData, { withCredentials: true });
+            const res = await api.put('/users/profile', formData);
             console.log('Update successful:', res.data); // Debug log
             setMessage('Profile updated successfully!');
             setError('');
@@ -58,31 +58,36 @@ const UpdateProfileForm = ({ user, onUpdate }) => {
     };
 
     return (
-        <form className="update-form" onSubmit={handleSubmit}>
-            <h2>Edit Profile</h2>
-            {error && <p className="error-message">{error}</p>}
+        <div className="update-profile-form">
+            <h2>Update Profile</h2>
             {message && <p className="success-message">{message}</p>}
-            <input
-                type="text"
-                name="name"
-                placeholder="Full Name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-            />
-            <input
-                type="email"
-                name="email"
-                placeholder="Email Address"
-                value={formData.email}
-                onChange={handleChange}
-                required
-            />
-            <div className="form-actions">
-                <button type="submit">Save</button>
-                <button type="button" onClick={onUpdate}>Cancel</button>
-            </div>
-        </form>
+            {error && <p className="error-message">{error}</p>}
+            <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                    <label htmlFor="name">Name</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="email">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <button type="submit">Update Profile</button>
+            </form>
+        </div>
     );
 };
 

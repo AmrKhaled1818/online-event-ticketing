@@ -1,7 +1,7 @@
 import React from 'react';
 import './BookingCard.css';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../api/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -10,7 +10,7 @@ const BookingCard = ({ booking, onBookingCancelled }) => {
 
     const handleCancel = async () => {
         try {
-            await axios.delete(`/api/bookings/${booking._id}`, { withCredentials: true });
+            await api.delete(`/bookings/${booking._id}`);
             toast.success('Booking cancelled successfully!', {
                 position: "top-right",
                 autoClose: 3000,

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './UserBookingsPage.css';
 import BookingCard from './BookingCard';
-import axios from 'axios';
+import api from '../../api/api';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -10,7 +10,7 @@ const UserBookingsPage = () => {
 
     const fetchBookings = async () => {
         try {
-            const res = await axios.get('/api/bookings/my', { withCredentials: true });
+            const res = await api.get('/bookings/my');
             setBookings(res.data);
         } catch (err) {
             console.error('Error fetching bookings:', err);
