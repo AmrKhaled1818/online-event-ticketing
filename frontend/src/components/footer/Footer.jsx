@@ -58,7 +58,7 @@ const Footer = () => {
 
     setLoading(true);
     try {
-      await api.post('/users/contact', {
+      await api.post('/contact', {
         ...formData,
         interests: selectedInterests,
         budget: selectedBudget

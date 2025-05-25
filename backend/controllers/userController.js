@@ -319,6 +319,70 @@ const resetPassword = async (req, res) => {
   }
 };
 
+// Contact form submission
+const submitContactForm = async (req, res) => {
+  try {
+    const { name, company, email, phone, interests, budget, message } = req.body;
+
+    // Validate required fields
+    if (!name || !email || !message) {
+      return res.status(400).json({
+        success: false,
+        message: 'Name, email, and message are required'
+      });
+    }
+
+    // Log the request data for debugging
+    console.log('Contact form submission:', {
+      name,
+      company,
+      email,
+      phone,
+      interests,
+      budget,
+      message
+    });
+
+    // Send email to admin
+    await sendEmail({
+      email: 'amr.k.saad@outlook.com',
+      subject: 'New Contact Form Submission',
+      message: `
+        New contact form submission from ${name}:
+        
+        Name: ${name}
+        Company: ${company || 'N/A'}
+        Email: ${email}
+        Phone: ${phone || 'N/A'}
+        Interests: ${interests.join(', ')}
+        Budget: ${budget}
+        
+        Message:
+        ${message}
+      `,
+    });
+
+    res.json({ success: true, message: 'Message sent successfully' });
+  } catch (error) {
+    console.error('Contact form error:', error);
+    
+    // Check if it's an email configuration error
+    if (error.message.includes('Failed to send email')) {
+      return res.status(500).json({
+        success: false,
+        message: 'Email service configuration error. Please contact the administrator.',
+        error: error.message
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: 'Failed to send message',
+      error: error.message
+    });
+  }
+};
+
 export {
   registerUser,
   loginUser,
@@ -332,4 +396,5 @@ export {
   forgotPassword,
   verifyOtp,
   resetPassword,
+  submitContactForm,
 };

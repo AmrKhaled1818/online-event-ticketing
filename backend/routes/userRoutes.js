@@ -11,7 +11,8 @@ import {
   forgotPassword,
   verifyOtp,
   resetPassword,
-  logoutUser
+  logoutUser,
+  submitContactForm
 } from "../controllers/userController.js";
 import { getBookings } from "../controllers/bookingController.js";
 import { protect, restrictTo } from "../middleware/authMiddleware.js";
@@ -44,4 +45,8 @@ router.put("/resetPassword", resetPassword);
 
 // User routes
 router.get("/users/events/analytics", protect, restrictTo("organizer"), getEventAnalytics); // /api/v1/users/events/analytics (GET) - Event Organizer
+
+// Contact form route (public)
+router.post("/contact", submitContactForm);
+
 export default router;
