@@ -57,6 +57,12 @@
   align-items: center;
   max-width: 600px;
   margin: 0 auto;
+  position: relative;
+}
+
+.search-container {
+  display: flex;
+  width: 100%;
   background: white;
   border-radius: 999px;
   overflow: hidden;
@@ -81,6 +87,117 @@
   justify-content: center;
   border-radius: 0 999px 999px 0;
   cursor: pointer;
+}
+
+.search-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  margin-top: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 1000;
+  padding: 0.5rem;
+}
+
+.search-result-item {
+  display: block;
+  padding: 0.75rem;
+  text-decoration: none;
+  color: var(--primary-dark);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  margin-bottom: 0.5rem;
+  background: #f8f9fa;
+  border: 1px solid #eee;
+}
+
+.search-result-item:last-child {
+  margin-bottom: 0;
+}
+
+.search-result-item:hover {
+  background-color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: var(--highlight-red);
+}
+
+.event-info {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+.event-info h4 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--primary-dark);
+  font-weight: 600;
+}
+
+.event-date, .event-location, .event-price {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.event-date::before {
+  content: '📅';
+}
+
+.event-location::before {
+  content: '📍';
+}
+
+.event-price {
+  color: var(--highlight-red);
+  font-weight: 600;
+  justify-content: flex-end;
+}
+
+.event-price::before {
+  content: '💰';
+}
+
+.no-results, .loading-results {
+  padding: 1rem;
+  text-align: center;
+  color: #666;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin: 0.5rem;
+}
+
+.loading-results {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.loading-results::after {
+  content: '';
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ddd;
+  border-top-color: var(--highlight-red);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .categories-section {

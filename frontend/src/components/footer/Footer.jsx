@@ -1,10 +1,20 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import './Footer.css';
+import api from '../../api/api';
 
 const Footer = () => {
   const [selectedInterests, setSelectedInterests] = useState([]);
   const [selectedBudget, setSelectedBudget] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    company: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
   
   const interests = [
     'Event Planning', 'Concert Tickets', 'Sports Events', 'Festivals',
@@ -25,9 +35,53 @@ const Footer = () => {
     );
   };
 
-  const handleSubmit = (e) => {
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted with interests:', selectedInterests, 'budget:', selectedBudget);
+    
+    if (selectedInterests.length === 0) {
+      toast.error('Please select at least one interest');
+      return;
+    }
+    
+    if (!selectedBudget) {
+      toast.error('Please select a budget range');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await api.post('/users/contact', {
+        ...formData,
+        interests: selectedInterests,
+        budget: selectedBudget
+      });
+      
+      toast.success('Message sent successfully! We will get back to you soon.');
+      
+      // Reset form
+      setFormData({
+        name: '',
+        company: '',
+        email: '',
+        phone: '',
+        message: ''
+      });
+      setSelectedInterests([]);
+      setSelectedBudget('');
+      
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to send message. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -37,22 +91,48 @@ const Footer = () => {
         <form className="contact-form" onSubmit={handleSubmit}>
           <div className="form-section">
             <label>Name</label>
-            <input type="text" placeholder="Your name" required />
+            <input 
+              type="text" 
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              placeholder="Your name" 
+              required 
+            />
           </div>
           
           <div className="form-section">
             <label>Company</label>
-            <input type="text" placeholder="Company name" />
+            <input 
+              type="text" 
+              name="company"
+              value={formData.company}
+              onChange={handleInputChange}
+              placeholder="Company name" 
+            />
           </div>
           
           <div className="form-section">
             <label>Your Email</label>
-            <input type="email" placeholder="your.email@example.com" required />
+            <input 
+              type="email" 
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              placeholder="your.email@example.com" 
+              required 
+            />
           </div>
           
           <div className="form-section">
             <label>Your Phone</label>
-            <input type="tel" placeholder="Your phone number" />
+            <input 
+              type="tel" 
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
+              placeholder="Your phone number" 
+            />
           </div>
           
           <div className="interest-section">
@@ -88,12 +168,18 @@ const Footer = () => {
           <div className="form-section full-width">
             <label>Tell us about your event</label>
             <textarea 
+              name="message"
+              value={formData.message}
+              onChange={handleInputChange}
               placeholder="Describe your event requirements, preferred dates, expected attendance, or any special requests..."
               rows="4"
+              required
             ></textarea>
           </div>
           
-          <button type="submit">Submit Request</button>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Sending...' : 'Submit Request'}
+          </button>
         </form>
       </div>
       

@@ -1,9 +1,51 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
 import slideshow from './Slideshow.png';
+import api from '../../api/api';
 
 const HomePage = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  useEffect(() => {
+    const searchEvents = async () => {
+      if (searchTerm.trim().length === 0) {
+        setSearchResults([]);
+        setShowDropdown(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const response = await api.get(`/events/search?query=${encodeURIComponent(searchTerm)}`);
+        if (response.data.success) {
+          setSearchResults(response.data.data);
+          setShowDropdown(true);
+        }
+      } catch (error) {
+        console.error('Search error:', error);
+        setSearchResults([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const debounceTimer = setTimeout(searchEvents, 300);
+    return () => clearTimeout(debounceTimer);
+  }, [searchTerm]);
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleEventClick = () => {
+    setShowDropdown(false);
+    setSearchTerm('');
+  };
+
   return (
     <div className="home-wrapper">
       <div className="hero-section">
@@ -20,15 +62,49 @@ const HomePage = () => {
             Discover and book tickets to concerts, sports, festivals, and more. Best prices, best vibes.
           </p>
           <div className="hero-search">
-            <input type="text" placeholder="Search for events..." />
-            <button className="search-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" height="20" fill="#EEEEEE" viewBox="0 0 24 24" width="20">
-                <path d="M0 0h24v24H0z" fill="none" />
-                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5
-                    6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5
-                    4.99L20.49 19l-4.99-5zM10 14a4 4 0 110-8 4 4 0 010 8z"/>
-              </svg>
-            </button>
+            <div className="search-container">
+              <input 
+                type="text" 
+                placeholder="Search for events..." 
+                value={searchTerm}
+                onChange={handleSearchChange}
+              />
+              <button className="search-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" height="20" fill="#EEEEEE" viewBox="0 0 24 24" width="20">
+                  <path d="M0 0h24v24H0z" fill="none" />
+                  <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zM10 14a4 4 0 110-8 4 4 0 010 8z"/>
+                </svg>
+              </button>
+            </div>
+            {showDropdown && searchResults.length > 0 && (
+              <div className="search-dropdown">
+                {searchResults.map(event => (
+                  <Link 
+                    key={event._id} 
+                    to={`/events/${event._id}`} 
+                    className="search-result-item"
+                    onClick={handleEventClick}
+                  >
+                    <div className="event-info">
+                      <h4>{event.title}</h4>
+                      <p className="event-date">{new Date(event.date).toLocaleDateString()}</p>
+                      <p className="event-location">{event.location}</p>
+                      <p className="event-price">{event.ticketPrice} EGP</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+            {showDropdown && searchResults.length === 0 && !loading && (
+              <div className="search-dropdown">
+                <div className="no-results">No events found</div>
+              </div>
+            )}
+            {loading && (
+              <div className="search-dropdown">
+                <div className="loading-results">Searching...</div>
+              </div>
+            )}
           </div>
         </div>
       </div>
