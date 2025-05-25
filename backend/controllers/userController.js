@@ -343,23 +343,23 @@ const submitContactForm = async (req, res) => {
       message
     });
 
+    // Build a clean HTML email
+    const htmlMessage = `
+      <h2>New Event Inquiry</h2>
+      <p><strong>Name:</strong> ${name}<br>
+      <strong>Company:</strong> ${company || 'N/A'}<br>
+      <strong>Email:</strong> ${email}<br>
+      <strong>Phone:</strong> ${phone || 'N/A'}<br>
+      <strong>Interests:</strong> ${(interests && interests.length) ? interests.join(', ') : 'N/A'}<br>
+      <strong>Budget:</strong> ${budget || 'N/A'}</p>
+      <p><strong>Message:</strong><br>${message}</p>
+    `;
+
     // Send email to admin
     await sendEmail({
       email: 'amr.k.saad@outlook.com',
       subject: 'New Contact Form Submission',
-      message: `
-        New contact form submission from ${name}:
-        
-        Name: ${name}
-        Company: ${company || 'N/A'}
-        Email: ${email}
-        Phone: ${phone || 'N/A'}
-        Interests: ${interests.join(', ')}
-        Budget: ${budget}
-        
-        Message:
-        ${message}
-      `,
+      message: htmlMessage,
     });
 
     res.json({ success: true, message: 'Message sent successfully' });
