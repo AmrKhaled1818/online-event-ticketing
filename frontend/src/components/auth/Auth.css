@@ -1,0 +1,77 @@
+/* OTP Verification Styles */
+.otp-inputs {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+.otp-inputs input {
+    width: 3rem;
+    height: 3.5rem;
+    text-align: center;
+    font-size: 1.5rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.otp-inputs input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.otp-inputs input:invalid {
+    border-color: #dc3545;
+}
+
+.otp-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.otp-footer p {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.resend-button {
+    background: none;
+    border: none;
+    color: #007bff;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: color 0.2s;
+}
+
+.resend-button:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.resend-button:disabled {
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+.auth-subtitle {
+    text-align: center;
+    color: #6c757d;
+    margin-bottom: 2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .otp-inputs {
+        gap: 0.25rem;
+    }
+
+    .otp-inputs input {
+        width: 2.5rem;
+        height: 3rem;
+        font-size: 1.25rem;
+    }
+} 
