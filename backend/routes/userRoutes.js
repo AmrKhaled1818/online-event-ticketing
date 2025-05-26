@@ -12,7 +12,9 @@ import {
   verifyOtp,
   resetPassword,
   logoutUser,
-  submitContactForm
+  submitContactForm,
+  verifyRegistrationOTP,
+  resendRegistrationOTP
 } from "../controllers/userController.js";
 import { getBookings } from "../controllers/bookingController.js";
 import { protect, restrictTo } from "../middleware/authMiddleware.js";
@@ -48,5 +50,9 @@ router.get("/users/events/analytics", protect, restrictTo("organizer"), getEvent
 
 // Contact form route (public)
 router.post("/contact", submitContactForm);
+
+// Registration OTP routes
+router.post("/verify-registration-otp", verifyRegistrationOTP);
+router.post("/resend-registration-otp", resendRegistrationOTP);
 
 export default router;

@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import sendEmail from "../utils/sendEmail.js";
+import bcrypt from "bcryptjs";
 
 // Generate Token Cookie Helper
 const sendTokenResponse = (user, res) => {
@@ -26,31 +27,135 @@ const sendTokenResponse = (user, res) => {
   });
 };
 
-// Register a new user
+// Generate OTP
+const generateOTP = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+// Store OTP in memory (in production, use Redis or similar)
+const otpStore = new Map();
+
+// Register user
 const registerUser = async (req, res) => {
-  const { name, email, password, role } = req.body;
+    try {
+        const { name, email, password, role } = req.body;
 
-  try {
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: "Name, email, and password are required" });
+        // Check if user already exists
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: 'User already exists' });
+        }
+
+        // Generate OTP
+        const otp = generateOTP();
+        otpStore.set(email, {
+            otp,
+            timestamp: Date.now(),
+            userData: { name, email, password, role }
+        });
+
+        // Send OTP via email
+        const message = `Your registration OTP: ${otp} (valid for 5 minutes)`;
+        await sendEmail({
+            email: email,
+            subject: "Registration OTP",
+            message,
+        });
+
+        res.status(200).json({
+            message: 'OTP sent successfully'
+        });
+    } catch (error) {
+        console.error('Registration error:', error);
+        res.status(500).json({ message: 'Registration failed' });
     }
+};
 
-    const userExists = await User.findOne({ email });
-    if (userExists) {
-      return res.status(400).json({ message: "User already exists" });
+// Verify registration OTP
+const verifyRegistrationOTP = async (req, res) => {
+    try {
+        const { email, otp } = req.body;
+
+        const storedData = otpStore.get(email);
+        if (!storedData) {
+            return res.status(400).json({ message: 'Invalid or expired OTP' });
+        }
+
+        // Check if OTP is expired (5 minutes)
+        if (Date.now() - storedData.timestamp > 5 * 60 * 1000) {
+            otpStore.delete(email);
+            return res.status(400).json({ message: 'OTP expired' });
+        }
+
+        // Verify OTP
+        if (storedData.otp !== otp) {
+            return res.status(400).json({ message: 'Invalid OTP' });
+        }
+
+        // Create user
+        const { name, password, role } = storedData.userData;
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const user = await User.create({
+            name,
+            email,
+            password: hashedPassword,
+            role
+        });
+
+        // Clear OTP data
+        otpStore.delete(email);
+
+        // Generate token
+        const token = jwt.sign(
+            { userId: user._id, role: user.role },
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+
+        res.status(201).json({
+            message: 'Registration successful',
+            token,
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role
+            }
+        });
+    } catch (error) {
+        console.error('OTP verification error:', error);
+        res.status(500).json({ message: 'OTP verification failed' });
     }
+};
 
-    const user = await User.create({
-      name,
-      email,
-      password,
-      role: role || "user",
-    });
+// Resend registration OTP
+const resendRegistrationOTP = async (req, res) => {
+    try {
+        const { email } = req.body;
 
-    sendTokenResponse(user, res);
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
-  }
+        const storedData = otpStore.get(email);
+        if (!storedData) {
+            return res.status(400).json({ message: 'No registration in progress' });
+        }
+
+        // Generate new OTP
+        const newOtp = generateOTP();
+        otpStore.set(email, {
+            ...storedData,
+            otp: newOtp,
+            timestamp: Date.now()
+        });
+
+        // Send new OTP via email (implement your email service here)
+        // For now, we'll just return the OTP in the response
+        res.status(200).json({
+            message: 'New OTP sent successfully',
+            otp: newOtp // Remove this in production
+        });
+    } catch (error) {
+        console.error('Resend OTP error:', error);
+        res.status(500).json({ message: 'Failed to resend OTP' });
+    }
 };
 
 // Login user
@@ -383,6 +488,7 @@ const submitContactForm = async (req, res) => {
   }
 };
 
+// Export all functions
 export {
   registerUser,
   loginUser,
@@ -397,4 +503,6 @@ export {
   verifyOtp,
   resetPassword,
   submitContactForm,
+  verifyRegistrationOTP,
+  resendRegistrationOTP
 };

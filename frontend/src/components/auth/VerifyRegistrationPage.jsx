@@ -9,6 +9,7 @@ const VerifyRegistrationPage = () => {
     const [otp, setOtp] = useState(['', '', '', '', '', '']);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [timer, setTimer] = useState(300); // 5 minutes in seconds
     const navigate = useNavigate();
     const inputRefs = useRef([]);
 
@@ -17,7 +18,21 @@ const VerifyRegistrationPage = () => {
         const email = localStorage.getItem('registrationEmail');
         if (!email) {
             navigate('/register');
+            return;
         }
+
+        // Start countdown timer
+        const interval = setInterval(() => {
+            setTimer((prev) => {
+                if (prev <= 1) {
+                    clearInterval(interval);
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(interval);
     }, [navigate]);
 
     const handleChange = (index, value) => {
@@ -37,6 +52,20 @@ const VerifyRegistrationPage = () => {
         // Move to previous input on backspace if current input is empty
         if (e.key === 'Backspace' && !otp[index] && index > 0) {
             inputRefs.current[index - 1].focus();
+        }
+    };
+
+    const handleResendOTP = async () => {
+        try {
+            setLoading(true);
+            const email = localStorage.getItem('registrationEmail');
+            await api.post('/resend-registration-otp', { email });
+            setTimer(300); // Reset timer to 5 minutes
+            toast.success('New OTP sent successfully!');
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Failed to resend OTP');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -60,14 +89,19 @@ const VerifyRegistrationPage = () => {
             }
 
             const response = await api.post('/verify-registration-otp', { email, otp: otpString });
-            toast.success('Registration successful!');
+            
+            // Store token and user data
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('user', JSON.stringify(response.data.user));
             
             // Clear registration email
             localStorage.removeItem('registrationEmail');
             
+            toast.success('Registration successful!');
+            
             // Add artificial delay
             setTimeout(() => {
-                navigate('/login');
+                navigate('/');
             }, 1500);
         } catch (err) {
             const errorMessage = err.response?.data?.message || 'Failed to verify OTP. Please try again.';
@@ -76,6 +110,12 @@ const VerifyRegistrationPage = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
     return (
@@ -90,7 +130,12 @@ const VerifyRegistrationPage = () => {
                 <form className="verify-form" onSubmit={handleSubmit}>
                     <h2>Verify Email</h2>
                     {error && <p className="error-message">{error}</p>}
-                    <p className="otp-instruction">Enter the 6-digit code sent to your email</p>
+                    <p className="otp-instruction">
+                        Enter the 6-digit code sent to your email
+                        {timer > 0 && (
+                            <span className="timer"> (expires in {formatTime(timer)})</span>
+                        )}
+                    </p>
                     
                     <div className="otp-inputs">
                         {otp.map((digit, index) => (
@@ -108,7 +153,22 @@ const VerifyRegistrationPage = () => {
                     </div>
                     
                     <button type="submit" disabled={loading}>Verify Email</button>
+                    
                     <div className="link-container">
+                        {timer === 0 ? (
+                            <button
+                                type="button"
+                                onClick={handleResendOTP}
+                                disabled={loading}
+                                className="resend-link"
+                            >
+                                Resend OTP
+                            </button>
+                        ) : (
+                            <p className="resend-timer">
+                                Resend OTP in {formatTime(timer)}
+                            </p>
+                        )}
                         <a href="/register">Back to Registration</a>
                     </div>
                 </form>

@@ -30,6 +30,7 @@ import Footer from './components/footer/Footer';
 import HomePage from './components/home/Home';
 import LegalFallback from './components/Terms.jsx';
 import ScrollToTop from './components/ScrollToTop'; // adjust path as needed
+import VerifyRegistrationPage from './components/auth/VerifyRegistrationPage';
 
 // Simple auth check (can be replaced later with proper context)
 const isAuthenticated = document.cookie.includes('token=') || localStorage.getItem('token');
@@ -81,7 +82,7 @@ function AppRoutes() {
         <Route path="/admin/events" element={<AdminEventsPage />} />
         <Route path="/admin/users" element={<AdminUsersPage />} />
         <Route path="/termsandpolicy" element={<LegalFallback />} />
-        <Route path="/termsandpolicy" element={<LegalFallback />} />
+        <Route path="/verify-registration" element={<VerifyRegistrationPage />} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" />} />

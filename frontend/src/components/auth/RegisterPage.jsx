@@ -33,13 +33,15 @@ const RegisterPage = () => {
         try {
             const response = await api.post('/register', formData);
             console.log('Register success:', response.data);
-            toast.success('Registration successful! Please log in.');
+            
+            // Store email for OTP verification
+            localStorage.setItem('registrationEmail', formData.email);
+            
+            toast.success('OTP sent to your email!');
             setError('');
             
-            // Add artificial delay
-            setTimeout(() => {
-                navigate('/login');
-            }, 1500);
+            // Navigate to OTP verification page
+            navigate('/verify-registration');
         } catch (err) {
             const errorMessage = err.response?.data?.message || 'Registration failed';
             setError(errorMessage);
